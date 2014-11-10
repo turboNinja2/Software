@@ -2,14 +2,15 @@ from math import *
 from ErrorEvaluation import logloss
 from DataOperations import *
 from datetime import datetime
+from tools.misc import shrink, copysign
 
 class Model:
   def __init__(self, params, wInit):
-    self.params       = params
-    self.w            = wInit
+    self.params = params
+    self.w = wInit
     self.nbIterations = 0
-    self.loss         = 0
-    self.name         = "Unamed"
+    self.loss = 0
+    self.name = "Unamed"
     for key in params.keys():
       setattr(self, key, params[key])
 
@@ -29,7 +30,7 @@ class Model:
     return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
 
   def getLogLoss(self):
-    return self.loss * 1. /  self.nbIterations
+    return self.loss * 1. / self.nbIterations
 
 
   def train(self, trainPath,customRefreshLine=None):
@@ -45,13 +46,11 @@ class Model:
           print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
         tt += 1
 
-
-    
 class OnlineLinearLearning(Model):
   def __init__(self,params,wInit):
     Model.__init__(self,params, wInit)
-    self.n      = [0] * len(wInit)
-    self.name   = "Online method"
+    self.n = [0] * len(wInit)
+    self.name = "Online method"
 
 
   ## D.  Update given model
@@ -89,3 +88,40 @@ class ZALMS(Model):
     for i in x:
       self.w[i] -= self.delta * ((p - y) * 1. + self.rho * copysign(self.w[i],1))
 
+class OLBI(Model):
+  def __init__(self,params,wInit):
+    Model.__init__(self,params, wInit)
+    self.name = "OLBI"
+
+  def update(self, x, y):
+    p = self.predict(x)
+    self.nbIterations += 1
+    self.loss += logloss(p, y)  # for progressive validation
+    for i in x:
+      self.w[i] -= self.delta * (p - y) * 1. 
+      self.w[i] = shrink(self.w[i], self.gamma) 
+
+class PA(Model):
+  def __init__(self,params,wInit):
+    Model.__init__(self,params, wInit)
+    self.name = "PA"
+
+  def innerProduct(self,x):
+    wTx = 0.
+    n = 0
+    for i in x:  # do wTx
+      wTx += self.w[i] * 1.  # w[i] * x[i], but if i in x we got x[i] = 1.
+      n+=1
+    return wTx,n
+
+  def update(self, x, y):
+    wTx,n = self.innerProduct(x)
+    p = copysign(1,wTx)
+    sufferLoss = max(0,1 - y * wTx)
+    self.nbIterations += 1
+    self.loss += logloss(p, y)  # for progressive validation
+    tau = sufferLoss / (n**2)
+    for i in x:
+      self.w[i] -= tau * y * 1. 
+
+  def predict(self,x):

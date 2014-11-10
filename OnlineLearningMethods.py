@@ -10,6 +10,7 @@ class Model:
     self.w = wInit
     self.nbIterations = 0
     self.loss = 0
+    self.validation_loss = 0
     self.name = "Unamed"
     for key in params.keys():
       setattr(self, key, params[key])
@@ -17,8 +18,7 @@ class Model:
   def __str__(self):
    return "%s, params : %s" % (self.name, str(self.params))
  
-
-   def innerProduct(self,x):
+  def innerProduct(self,x):
     wTx = 0.
     n = 0
     for i in x:  # do wTx
@@ -27,25 +27,31 @@ class Model:
     return wTx,n
 
   def predict(self, x):
-    wTx = innerProduct(self,x)
+    wTx,_ = self.innerProduct(x)
     return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
-
-
+  
   def getLogLoss(self):
     return self.loss * 1. / self.nbIterations
 
-  def train(self, trainPath,customRefreshLine=None):
+  def run(self, trainPath,update=True,customRefreshLine=None):
     if customRefreshLine is not None:
       refreshLine = customRefreshLine
     tt = 1
-    data = DataParser(trainPath) 
+    data = DataParser(trainPath)
+    self.validation_loss = 0
     for ID, x, y in data.run():
+      if update: 
         self.update(x, y)
-        # print out progress, so that we know everything is working
-        if tt % refreshLine == 0:
-          print('Model desc:' + str(self))
-          print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
-        tt += 1
+      else:
+        p = self.predict(x)
+        self.validation_loss += logloss(p,y)
+      # print out progress, so that we know everything is working
+      if tt % refreshLine == 0:
+        print('Model desc:' + str(self))
+        print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
+      tt += 1
+    if not update:
+      return self.validation_loss * 1. / tt
 
 class OnlineLinearLearning(Model):
   def __init__(self,params,wInit):
@@ -107,6 +113,7 @@ class PA(Model):
     self.name = "PA"
 
   def update(self, x, y):
+    y = 2 * y - 1
     wTx,n = self.innerProduct(x)
     p = copysign(1,wTx)
     sufferLoss = max(0,1 - y * wTx)
@@ -117,7 +124,7 @@ class PA(Model):
       self.w[i] -= tau * y * 1. 
 
   def predict(self,x):
-    wTx,n = self.innerProduct(x)
+    wTx,_ = self.innerProduct(x)
     p = (1 + copysign(1,wTx)) / 2.
     return p
 

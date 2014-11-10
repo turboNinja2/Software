@@ -5,6 +5,7 @@ from settings               import *
 from Learn                  import *
 from ErrorEvaluation        import *
 from OnlineLearningMethods  import *
+from Globals                import *
 
 refreshLine = 100
 
@@ -20,8 +21,9 @@ expected = 0.167259060835432709423848
 
 
 model = Learning(params, w)
-model.train(train,refreshLine)
-found = validationError(validation, model)
+model.run(train,customRefreshLine=refreshLine)
+found = model.run(validation,customRefreshLine=refreshLine,update=False)
+#found = validationError(validation, model)
 
 #trainModels(train,[model] * 2)
 

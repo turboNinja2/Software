@@ -26,5 +26,5 @@ trainModel(validation_set,model)
 validationError(validation_set,model)
 
 # createValidationSet(dataPath,'train_rev2.csv')
-print('Hello World Juju')
+print('Hello World Juju and Ulysse')
 print(train)

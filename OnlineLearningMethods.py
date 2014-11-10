@@ -34,11 +34,9 @@ class Model:
     return self.loss * 1. /  self.nbIterations
 
 
-  def train(self, trainPath,update=True,customRefreshLine=None):
-    print customRefreshLine
+  def run(self, trainPath,update=True,customRefreshLine=None):
     if customRefreshLine is not None:
       refreshLine = customRefreshLine
-      print "ok"
     tt = 1
     data = DataParser(trainPath)
     self.validation_loss = 0

@@ -21,8 +21,8 @@ expected = 0.167259060835432709423848
 
 
 model = Learning(params, w)
-model.train(train,customRefreshLine=refreshLine)
-found = model.train(validation,customRefreshLine=refreshLine,update=False)
+model.run(train,customRefreshLine=refreshLine)
+found = model.run(validation,customRefreshLine=refreshLine,update=False)
 #found = validationError(validation, model)
 
 #trainModels(train,[model] * 2)

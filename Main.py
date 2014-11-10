@@ -20,11 +20,7 @@ alpha = .1   # learning rate for sgd optimization
 w = [0.] * D
 model = OnlineLinearLearning(alpha,w)
 
-
 trainModel(validation_set,model)
-
 validationError(validation_set,model)
 
-# createValidationSet(dataPath,'train_rev2.csv')
-print('Hello World Juju')
-print(train)
+print('Program ended')

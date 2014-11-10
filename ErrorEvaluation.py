@@ -1,6 +1,8 @@
+from Globals import *
 from math import log, exp
 from OnlineLearningMethods import OnlineLinearLearning
 from DataOperations import data
+from datetime import datetime
 
 # B. Bounded logloss
 # INPUT:
@@ -13,11 +15,13 @@ def logloss(p, y):
     return -log(p) if y == 1. else -log(1. - p)
 
 def validationError(validationPath,model):
+    loss = 0.
+    tt = 1
     for ID, x, y in data(validationPath, traindata = True):
         p = model.predict(x)
         loss += logloss(p, y)  
 
-        if tt % 100000 == 0:
+        if tt % refreshLine == 0:
             print('%s\tencountered: %d\tcurrent logloss: %f' % (
                     datetime.now(), tt, (loss * 1./tt)))
         tt += 1

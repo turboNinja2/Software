@@ -23,4 +23,6 @@ model = OnlineLinearLearning(alpha,w)
 trainModel(validation_set,model)
 validationError(validation_set,model)
 
-print('Program ended')
+# createValidationSet(dataPath,'train_rev2.csv')
+
+print('Hello World Juju and Ulysse')

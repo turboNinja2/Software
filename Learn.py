@@ -17,11 +17,11 @@ def trainModel(trainPath,model):
         p = model.predict(x)
         model.update(n, x, y)
         loss += logloss(p, y)  # for progressive validation
-
         # print out progress, so that we know everything is working
         if tt % refreshLine == 0:
-            print('%s\tencountered: %d\tcurrent logloss: %f' % (datetime.now(), tt, (loss * 1. / tt)))
+          printError(tt)
         tt += 1
+
 
 def trainModels(trainPath,models):
     n = [0.] * D

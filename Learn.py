@@ -10,9 +10,9 @@ from joblib import Parallel, delayed
 import multiprocessing
 
 
-def update(model, path):
+def updateModel(model, path):
   return model.update(path)
 
 def trainModels(trainPath,models):
     pool = Parallel(n_jobs = num_cores)
-    pool(delayed(update)(model,trainPath) for model in models)
+    pool(delayed(updateModel)(model,trainPath) for model in models)

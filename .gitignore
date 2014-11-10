@@ -1,2 +1,4 @@
 *.pyc
 *.pyproj
+*.swp
+settings.py

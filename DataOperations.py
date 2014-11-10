@@ -1,4 +1,4 @@
-from Globals import D
+from Globals import *
 
 # A. x, y generator
 # INPUT:

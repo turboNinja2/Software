@@ -113,15 +113,15 @@ class PA(Model):
     self.name = "PA"
 
   def update(self, x, y):
-    y = 2 * y - 1
+    yBis = 2 * y - 1
     wTx,n = self.innerProduct(x)
     p = copysign(1,wTx)
-    sufferLoss = max(0,1 - y * wTx)
+    sufferLoss = max(0,1 - yBis * wTx)
     self.nbIterations += 1
-    self.loss += logloss(p, y)  # for progressive validation
+    self.loss += logloss((p - 1.) /2., y)  # for progressive validation
     tau = sufferLoss / n
     for i in x:
-      self.w[i] -= tau * y * 1. 
+      self.w[i] -= tau * yBis * 1. 
 
   def predict(self,x):
     wTx,_ = self.innerProduct(x)

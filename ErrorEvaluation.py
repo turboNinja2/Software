@@ -1,5 +1,5 @@
 from Globals import *
-from settings import *
+from settings import * 
 from math import log, exp
 from DataOperations import *
 from datetime import *
@@ -36,8 +36,6 @@ def validationError(validationPath,model):
 def run(model,path):
   return model.run(path,update=False)
 
-global num_cores
-print num_cores
 def validationErrors(validationPath,models):
     pool = Parallel(n_jobs = num_cores)
     pool(delayed(run)(model,validationPath) for model in models)

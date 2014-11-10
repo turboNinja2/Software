@@ -18,7 +18,6 @@ Learning = OnlineLinearLearning
 train       = dataPath + "small_train_set.csv"
 validation  = dataPath + "small_validation_set.csv"
 
-
 expected = 0.167259060835432709423848
 
 

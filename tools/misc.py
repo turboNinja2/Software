@@ -1,4 +1,4 @@
-from math import max, copysign
+from math import  copysign
 
 def shrink(z,gamma):
   absz = copysign(z,1)

@@ -1,4 +1,5 @@
 from Globals import *
+from settings import *
 from math import log, exp, sqrt
 from ErrorEvaluation import logloss
 from datetime import datetime
@@ -6,9 +7,7 @@ from OnlineLearningMethods import *
 from DataOperations import *
 from multiprocessing import Pool
 from joblib import Parallel, delayed
-from settings import *
 import multiprocessing
-
 
 def trainModel(trainPath,model):
     tt = 1

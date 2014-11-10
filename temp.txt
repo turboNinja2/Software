@@ -1,13 +1,53 @@
 from Globals import *
-from OnlineLearningMethods  import OnlineLinearLearning
+from math import log, exp, sqrt
+from ErrorEvaluation import logloss
+from datetime import datetime
+from OnlineLearningMethods import *
+from DataOperations import *
+from multiprocessing import Pool
 
-#The absolute path to datas
-dataPath = 'C:/Users/JUJulien/Desktop/KAGGLE/Competitions/Avazu/Data/'
+def trainModel(trainPath,model):
+    n = [0.] * D
+    loss = 0.
+    tt = 1
+    data = DataParser(trainPath, traindata = True,mode= "classic") 
+    
+    for ID, x, y in data.run():
+        p = model.predict(x)
+        model.update(n, x, y)
+        loss += logloss(p, y)  # for progressive validation
 
-#Model to test
-alpha = .1   # learning rate for sgd optimization
-w = [0.] * D
-Learning = OnlineLinearLearning
+        # print out progress, so that we know everything is working
+        if tt % refreshLine == 0:
+            print('%s\tencountered: %d\tcurrent logloss: %f' % (datetime.now(), tt, (loss * 1. / tt)))
+        tt += 1
 
-validation = True
-submit = False
+def trainModels(trainPath,models):
+    n = [0.] * D
+    tt = 1
+    nbModels = len(models)
+    losses = [0.] * nbModels 
+
+    pool = Pool(processes=nbCpus)
+
+    def printError(tt):
+        time = datetime.now()
+        for i in range(0,nbModels):
+            print('%s\tencountered: %d\tcurrent logloss: %f' % (time, tt, (losses[i] * 1. / tt)))
+
+    for ID, x, y in data(trainPath, traindata = True):
+        def updateModel(i):
+            models[i].update(n,x,y)
+        
+        def evaluateError(i):
+            p = models[i].predict(x)
+            losses[i] += logloss(p, y) 
+
+        pool.map(updateModel, range(0,nbModels))
+        pool.map(evaluateError, range(0,nbModels))
+
+        # print out progress, so that we know everything is working
+        if tt % refreshLine == 0:
+            printError(tt)
+
+        tt += 1

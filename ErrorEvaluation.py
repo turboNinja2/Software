@@ -13,6 +13,7 @@ def logloss(p, y):
     return -log(p) if y == 1. else -log(1. - p)
 
 def validationError(validationPath,model):
+    loss = 0
     for ID, x, y in data(validationPath, traindata = True):
         p = model.predict(x)
         loss += logloss(p, y)  

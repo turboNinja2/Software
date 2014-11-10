@@ -4,7 +4,6 @@ from DataOperations import *
 from datetime import datetime
 
 class Model:
-
   def __init__(self, params, wInit):
     self.params           = params
     self.w                = wInit
@@ -59,7 +58,6 @@ class Model:
 
 
     
-
 class OnlineLinearLearning(Model):
   def __init__(self,params,wInit):
     Model.__init__(self,params, wInit)
@@ -101,3 +99,4 @@ class ZALMS(Model):
     self.loss += logloss(p, y)  # for progressive validation
     for i in x:
       self.w[i] -= self.delta * ((p - y) * 1. + self.rho * copysign(self.w[i],1))
+

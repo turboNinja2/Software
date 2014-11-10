@@ -17,7 +17,7 @@ def trainModel(trainPath,model):
         model.update(x, y)
         # print out progress, so that we know everything is working
         if tt % refreshLine == 0:
-          print('Model desc:' + model.description())
+          print(model)
           print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, model.getLogLoss()))
           print('\n')
         tt += 1

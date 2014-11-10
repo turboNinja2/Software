@@ -29,6 +29,6 @@ found = model.train(validation,customRefreshLine=refreshLine,update=False)
 
 
 if found == expected:
-  print "We're Good !"
+  print("We're Good !")
 else:
-  print "Houston, we got a problem. Found : %s, Expected : %s" % (found, expected)
+  print("Houston, we got a problem. Found : %s, Expected : %s" % (found, expected))

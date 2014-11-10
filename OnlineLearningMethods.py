@@ -76,3 +76,4 @@ class ZALMS(Model):
     for i in x:
       n[i] += abs(p - y)
       self.w[i] -= self.delta * ((p - y) * 1. + self.rho * copysign(self.w[i],1))
+

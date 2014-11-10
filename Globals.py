@@ -6,4 +6,4 @@ global nbCpus
 nbCpus = 7
 
 global refreshLine
-refreshLine = 500000
+refreshLine = 1000000

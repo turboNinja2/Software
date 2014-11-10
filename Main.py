@@ -1,13 +1,8 @@
 #!/usr/bin/env python
-
-
 from Learn                  import *
-from OnlineLearningMethods  import OnlineLinearLearning
-from Globals                import D
-from datetime               import datetime
-from DataOperations         import *
 from ErrorEvaluation        import *
 from settings               import *
+from Export import writeSubmission
 
 # folders #################################################################
 train_global    = dataPath + 'train_rev2.csv'  # path to training file
@@ -16,11 +11,14 @@ train_set       = dataPath + 'train_set.csv'  # path to training file
 validation_set  = dataPath + 'validation_set.csv'  # path to testing file
 
 # training and testing #######################################################
-alpha = .1   # learning rate for sgd optimization
-w = [0.] * D
-model = OnlineLinearLearning(alpha,w)
 
-trainModel(train_set,model)
-validationError(validation_set,model)
+if validation :
+    model = Learning(alpha,w)
+    trainModel(train_set,model)
+    validationError(validation_set,model)
+if submit :
+    model = Learning(alpha,w)
+    trainModel(train_global,model)
+    writeSubmission(dataPath,model)
 
 print('Hello World Juju and Ulysse')

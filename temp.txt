@@ -1,0 +1,13 @@
+from Globals import *
+from OnlineLearningMethods  import OnlineLinearLearning
+
+#The absolute path to datas
+dataPath = 'C:/Users/JUJulien/Desktop/KAGGLE/Competitions/Avazu/Data/'
+
+#Model to test
+alpha = .1   # learning rate for sgd optimization
+w = [0.] * D
+Learning = OnlineLinearLearning
+
+validation = True
+submit = False

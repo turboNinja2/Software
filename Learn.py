@@ -3,7 +3,7 @@ from settings import *
 from math import log, exp, sqrt
 from ErrorEvaluation import logloss
 from datetime import datetime
-from OnlineLearningMethods import *
+from Model import *
 from DataOperations import *
 from multiprocessing import Pool
 from joblib import Parallel, delayed

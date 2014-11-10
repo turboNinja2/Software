@@ -3,7 +3,7 @@ from Learn          import *
 from ErrorEvaluation    import *
 from settings         import *
 from Export import writeSubmission
-from OnlineLearningMethods import *
+from Model import *
 
 if __name__ == '__main__':
 

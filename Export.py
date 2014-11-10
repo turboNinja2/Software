@@ -1,5 +1,5 @@
 from datetime import datetime
-from OnlineLearningMethods import OnlineLinearLearning
+from Model import OnlineLinearLearning
 
 def writeSubmission(submissionPath,model):
   exportTime = datetime.now()

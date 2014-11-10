@@ -19,7 +19,6 @@ def trainModel(trainPath,model):
          print('%s\tencountered: %d\tcurrent logloss: %f' % (datetime.now(), tt, model.getLogLoss()))
         tt += 1
         
-
 def trainModels(trainPath,models):
     tt = 1
     data = DataParser(trainPath)
@@ -34,4 +33,3 @@ def trainModels(trainPath,models):
 
       #models[i].update(x, y)
       tt += 1
-        

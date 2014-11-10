@@ -15,8 +15,8 @@ class OnlineLinearLearning(Model):
     self.nbIterations = 0
     self.loss = 0.
 
-  def description():
-    return 'On line method, alpha =' + self.alpha 
+  def description(self):
+    return 'On line method, alpha =' + str(self.alpha)
 
   # C.  Get probability estimation on x
   # INPUT:
@@ -55,7 +55,6 @@ class OnlineLinearLearning(Model):
 
   def getLogLoss(self):
     return self.loss * 1. /  self.nbIterations
-
     
 class ZALMS(Model):
   def __init__(self,params,wInit):
@@ -65,8 +64,8 @@ class ZALMS(Model):
     self.nbIterations = 0
     self.loss = 0.
   
-  def description():
-    return 'ZALMS, delta =' + self.delta + 'rho = ' + self.rho
+  def description(self):
+    return 'ZALMS, delta =' + str(self.delta) + ' rho = ' + str(self.rho)
 
   # C.  Get probability estimation on x
   # INPUT:

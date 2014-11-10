@@ -4,6 +4,8 @@ from ErrorEvaluation    import *
 from settings         import *
 from Export import writeSubmission
 from Model import *
+from Models import *
+
 
 if __name__ == '__main__':
 
@@ -18,13 +20,15 @@ if __name__ == '__main__':
   # training and testing
   # #######################################################
 
+  model = PA({}, [0] * D)
+
   model_list = []
   for i in range(5):
-    model_list.append(OnlineLinearLearning({"alpha" : 5 ** -i}, [0] * D))
+    model_list.append(PAI({"C" : 5 ** -i}, [0] * D))
 
   if validation :
     # model = Learning(params,w)
-    models = Models(models)
+    models = Models(model_list)
     models.train(train_set)
     models.validation(validation_set)
     """

@@ -39,6 +39,7 @@ class Model:
     global refreshLine
     if customRefreshLine is not None:
       refreshLine = customRefreshLine
+
     tt = 1
     data = DataParser(trainPath)
     self.validation_loss = 0
@@ -103,11 +104,32 @@ class PA(Model):
   def update(self, x, y):
     yBis = 2 * y - 1
     wTx,n = self.innerProduct(x)
-    p = copysign(1,wTx)
     sufferLoss = max(0,1 - yBis * wTx)
     self.nbIterations += 1
-    self.loss += logloss((p - 1.) /2., y)  # for progressive validation
+    p = copysign(1,wTx)
+    self.loss += logloss((p + 1.) / 2., y)  # for progressive validation
     tau = sufferLoss / n
+    for i in x:
+      self.w[i] += tau * yBis * 1.  
+
+  def predict(self,x):
+    wTx,_ = self.innerProduct(x)
+    p = (1 + copysign(1,wTx)) / 2.
+    return p
+
+class PAI(Model):
+  def __init__(self,params,wInit):
+    Model.__init__(self,params, wInit)
+    self.name = "PA-I"
+
+  def update(self, x, y):
+    yBis = 2 * y - 1
+    wTx,n = self.innerProduct(x)
+    sufferLoss = max(0,1 - yBis * wTx)
+    self.nbIterations += 1
+    p = copysign(1,wTx)
+    self.loss += logloss((p + 1.) / 2., y)  # for progressive validation
+    tau = min(self.C,sufferLoss / n)
     for i in x:
       self.w[i] -= tau * yBis * 1. 
 

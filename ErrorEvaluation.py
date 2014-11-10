@@ -33,6 +33,9 @@ def validationError(validationPath,model):
   return model.validationError
 """
 
+def run(model,path):
+  return model.run(path,update=False)
+
 def validationErrors(validationPath,models):
     pool = Parallel(n_jobs = num_cores)
-    pool(delayed(validationError)(validationPath,model) for model in models)
+    pool(delayed(run)(model,validationPath) for model in models)

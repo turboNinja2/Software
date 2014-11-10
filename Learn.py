@@ -9,21 +9,10 @@ from multiprocessing import Pool
 from joblib import Parallel, delayed
 import multiprocessing
 
-"""
-def trainModel(trainPath,model):
-    tt = 1
-    data = DataParser(trainPath) 
-    for ID, x, y in data.run():
-        model.update(x, y)
-        # print out progress, so that we know everything is working
-        if tt % refreshLine == 0:
-          print(model)
-          print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, model.getLogLoss()))
-          print('\n')
-        tt += 1
-"""
 
+def update(model, path):
+  return model.update(path)
 
 def trainModels(trainPath,models):
     pool = Parallel(n_jobs = num_cores)
-    pool(delayed(trainModel)(trainPath,model) for model in models)
+    pool(delayed(update)(model,trainPath) for model in models)

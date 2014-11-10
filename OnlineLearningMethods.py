@@ -1,6 +1,15 @@
 from math import *
 
-class OnlineLinearLearning:
+
+
+class Model:
+
+  def __init__(self, params, wInit):
+    self.params = params
+    self.w = wInit
+
+
+class OnlineLinearLearning(Model):
   def __init__(self,params,wInit):
     self.alpha = params[0]
     self.w = wInit
@@ -41,7 +50,7 @@ class OnlineLinearLearning:
       n[i] += abs(p - y)
       self.w[i] -= (p - y) * 1. * self.alpha / sqrt(n[i])
 
-class ZALMS:
+class ZALMS(Model):
   def __init__(self,params,wInit):
     self.delta = params[0]
     self.rho = params[1]

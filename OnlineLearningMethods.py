@@ -29,7 +29,6 @@ class Model:
       wTx += (self.w[i]) * 1.  # w[i] * x[i], but if i in x we got x[i] = 1.
     return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
 
-
   def getLogLoss(self):
     return self.loss * 1. /  self.nbIterations
 

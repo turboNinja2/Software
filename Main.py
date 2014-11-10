@@ -19,7 +19,7 @@ if __name__ == '__main__':
   # #######################################################
 
   models = []
-  for i in range(10):
+  for i in range(5):
     models.append(OnlineLinearLearning({"alpha" : 5 ** -i}, [0] * D))
 
   if validation :

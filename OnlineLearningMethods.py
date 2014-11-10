@@ -6,11 +6,12 @@ from datetime import datetime
 class Model:
 
   def __init__(self, params, wInit):
-    self.params       = params
-    self.w            = wInit
-    self.nbIterations = 0
-    self.loss         = 0
-    self.name         = "Unamed"
+    self.params           = params
+    self.w                = wInit
+    self.nbIterations     = 0
+    self.loss             = 0
+    self.validation_loss  = 0
+    self.name             = "Unamed"
     for key in params.keys():
       setattr(self, key, params[key])
 
@@ -28,23 +29,33 @@ class Model:
     for i in x:  # do wTx
       wTx += (self.w[i]) * 1.  # w[i] * x[i], but if i in x we got x[i] = 1.
     return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
+  
 
   def getLogLoss(self):
     return self.loss * 1. /  self.nbIterations
 
 
-  def train(self, trainPath,customRefreshLine=None):
+  def train(self, trainPath,update=True,customRefreshLine=None):
+    print customRefreshLine
     if customRefreshLine is not None:
       refreshLine = customRefreshLine
+      print "ok"
     tt = 1
-    data = DataParser(trainPath) 
+    data = DataParser(trainPath)
+    self.validation_loss = 0
     for ID, x, y in data.run():
+      if update: 
         self.update(x, y)
-        # print out progress, so that we know everything is working
-        if tt % refreshLine == 0:
-          print('Model desc:' + str(self))
-          print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
-        tt += 1
+      else:
+        p = self.predict(x)
+        self.validation_loss += logloss(p,y)
+      # print out progress, so that we know everything is working
+      if tt % refreshLine == 0:
+        print('Model desc:' + str(self))
+        print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
+      tt += 1
+    if not update:
+      return self.validation_loss * 1./tt
 
 
     

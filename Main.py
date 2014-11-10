@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-from Learn          import *
-from ErrorEvaluation    import *
+from Learn            import *
+from ErrorEvaluation  import *
 from settings         import *
-from Export import writeSubmission
-from Model import *
+from Export           import writeSubmission
+from Model            import *
+from Models           import *
 
 if __name__ == '__main__':
 
@@ -24,7 +25,7 @@ if __name__ == '__main__':
 
   if validation :
     # model = Learning(params,w)
-    models = Models(models)
+    models = Models(model_list)
     models.train(train_set)
     models.validation(validation_set)
     """

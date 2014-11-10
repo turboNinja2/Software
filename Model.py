@@ -62,26 +62,11 @@ class OnlineLinearLearning(Model):
     self.n = [0] * len(wInit)
     self.name = "Online method"
 
-  ## D.  Update given model
-  # INPUT:
-  # alpha: learning rate
-  #   w: weights
-  #   n: sum of previous absolute gradients for a given feature
-  #    this is used for adaptive learning rate
-  #   x: feature, a list of indices
-  #   p: prediction of our model
-  #   y: answer
-  # MODIFIES:
-  #   w: weights
-  #   n: sum of past absolute gradients
   def update(self, x, y):
     p = self.predict(x)
     self.nbIterations += 1
     self.loss += logloss(p, y)  # for progressive validation
     for i in x:
-      # alpha / sqrt(n) is the adaptive learning rate
-      # (p - y) * x[i] is the current gradient
-      # note that in our case, if i in x then x[i] = 1.
       self.n[i] += abs(p - y)
       self.w[i] -= (p - y) * 1. * self.alpha / sqrt(self.n[i])
 

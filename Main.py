@@ -24,6 +24,7 @@ if __name__ == '__main__':
 
   if validation :
     # model = Learning(params,w)
+
     trainModels(train_set,models)
     validationErrors(validation_set,models)
   if submit :

@@ -4,9 +4,10 @@ from settings               import *
 from Learn                  import *
 from ErrorEvaluation        import *
 from Model                  import *
+from Models                 import *
 from Globals                import *
 
-refreshLine = 100
+refreshLine = 150
 MULTI = True
 
 params = {"alpha" : 0.1}   # learning rate for sgd optimization
@@ -30,6 +31,7 @@ else:
   print("Houston, we got a problem. Found : %s, Expected : %s" % (found, expected))
 
 if MULTI:
-  models = [Learning(params, w)] * 2
-  trainModels(train, models)
-  print(validationErrors(validation, models))
+  model_list = [Learning(params, w)] * 2
+  models = Models(model_list)
+  models.train(train)
+  models.validation(validation)

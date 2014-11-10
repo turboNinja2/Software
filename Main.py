@@ -18,15 +18,19 @@ if __name__ == '__main__':
   # training and testing
   # #######################################################
 
-  models = []
+  model_list = []
   for i in range(5):
-    models.append(PA({"alpha" : 5 ** -i}, [0] * D))
+    model_list.append(OnlineLinearLearning({"alpha" : 5 ** -i}, [0] * D))
 
   if validation :
     # model = Learning(params,w)
-
+    models = Models(models)
+    models.train(train_set)
+    models.validation(validation_set)
+    """
     trainModels(train_set,models)
     validationErrors(validation_set,models)
+    """
   if submit :
     model = Learning(params,w)
     model.train(train_global)

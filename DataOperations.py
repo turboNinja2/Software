@@ -45,16 +45,15 @@ class DataParser:
 
   def cross_prod(self, line, x):
     i = 0 
-    for m1, feat1 in enumerate(line, rstrip().split(',')):
+    for m1, feat1 in enumerate(line.rstrip().split(',')):
       if m1 == 0:
-        ID1 = int(feat1)
+        ID = int(feat1)
       elif self.traindata and m1 == 1:
         y = float(feat1)
       else:
-        for m2, feat2 in enumerate(line, rstrop().split(',')):
-          if m2 != 0 and not (self.trandata and m2 == 1):
+        for m2, feat2 in enumerate(line.rstrip().split(',')):
+          if m2 != 0 and not (self.traindata and m2 == 1):
             x[i] = abs(hash(str(m1) + '_' + feat1 + '_' + str(m2) + '_' + feat2)) %D
-            print len(line)
             i += 1
     return (ID, x, y)
             
@@ -85,7 +84,7 @@ class DataParser:
         x = [0] *self.parsing_lenght
         continue
       ID, x, y = self.parsing_method(self, line, x)
-    yield (ID, x, y) if traindata else (ID, x)
+      yield (ID, x, y) if self.traindata else (ID, x)
 
          
    

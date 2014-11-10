@@ -2,6 +2,8 @@ from Globals import *
 from math import log, exp
 from DataOperations import *
 from datetime import *
+from joblib import Parallel, delayed
+import multiprocessing
 
 # B. Bounded logloss
 # INPUT:
@@ -26,3 +28,7 @@ def validationError(validationPath,model):
           datetime.now(), tt, (loss * 1./tt)))
     tt += 1
   return (loss * 1./tt)
+
+def validationErrors(validationPath,models):
+    pool = Parallel(n_jobs = num_cores)
+    pool(delayed(validationError)(validationPath,model) for model in models)

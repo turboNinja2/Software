@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
 
-from settings         import *
-from Learn            import *
-from ErrorEvaluation  import *
+from settings               import *
+from Learn                  import *
+from ErrorEvaluation        import *
+from OnlineLearningMethods  import *
 
 
+params = [.1]   # learning rate for sgd optimization
+w = [0.] * D
+Learning = OnlineLinearLearning
 
 train       = dataPath + "small_train_set.csv"
 validation  = dataPath + "small_validation_set.csv"

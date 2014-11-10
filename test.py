@@ -7,7 +7,7 @@ from ErrorEvaluation        import *
 from OnlineLearningMethods  import *
 
 
-params = [.1]   # learning rate for sgd optimization
+params = {"alpha" : 0.1}   # learning rate for sgd optimization
 w = [0.] * D
 Learning = OnlineLinearLearning
 
@@ -21,6 +21,8 @@ expected = 0.167259060835432709423848
 model = Learning(params, w)
 trainModel(train, model)
 found = validationError(validation, model)
+
+#trainModels(train,[model] * 2)
 
 
 if found == expected:

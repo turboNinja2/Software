@@ -18,13 +18,19 @@ def trainModel(trainPath,model):
         if tt % refreshLine == 0:
          print('%s\tencountered: %d\tcurrent logloss: %f' % (datetime.now(), tt, model.getLogLoss()))
         tt += 1
-        
+
+
+def foo(model, x, y):
+  return model.update(x,y)
+
 def trainModels(trainPath,models):
     tt = 1
     data = DataParser(trainPath)
     nbModels = len(models) 
+    pool = Parallel(n_jobs = num_cores)
     for ID, x, y in data.run():
-      Parallel(n_jobs=num_cores)(delayed(model.update)(x,y) for model in models)
+
+      print pool(delayed(foo)(model,x,y) for model in models)
 
       if tt % refreshLine == 0:
         print('Encountered: %d\t' % (tt))

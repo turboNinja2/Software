@@ -28,7 +28,8 @@ def validationError(validationPath,model):
       print('%s\tencountered: %d\t logloss: %f' % (
           datetime.now(), tt, (loss * 1./tt)))
     tt += 1
-  return (loss * 1./tt)
+  model.validationError = loss * 1./tt
+  return model.validationError
 
 def validationErrors(validationPath,models):
     pool = Parallel(n_jobs = num_cores)

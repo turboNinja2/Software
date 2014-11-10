@@ -14,6 +14,7 @@ class OnlineLinearLearning(Model):
     self.n = [0] * len(wInit)
     self.nbIterations = 0
     self.loss = 0.
+    self.validationError = 0.
 
   def description(self):
     return 'On line method, alpha =' + str(self.alpha)
@@ -63,7 +64,8 @@ class ZALMS(Model):
     self.w = wInit
     self.nbIterations = 0
     self.loss = 0.
-  
+    self.validationError = 0.
+
   def description(self):
     return 'ZALMS, delta =' + str(self.delta) + ' rho = ' + str(self.rho)
 

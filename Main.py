@@ -10,20 +10,17 @@ if __name__ == '__main__':
   import test
 
   # folders #################################################################
-  train_global  = dataPath + 'train_rev2.csv'  # path to training file
-  test_global   = dataPath + 'test_rev2.csv'  # path to testing file
-  train_set     = dataPath + 'train_set.csv'  # path to training file
-  validation_set  = dataPath + 'validation_set.csv'  # path to testing file
+  train_global = dataPath + 'train_rev2.csv'  # path to training file
+  test_global = dataPath + 'test_rev2.csv'  # path to testing file
+  train_set = dataPath + 'train_set.csv'  # path to training file
+  validation_set = dataPath + 'validation_set.csv'  # path to testing file
 
-  # training and testing #######################################################
+  # training and testing
+  # #######################################################
 
-  models = [ZALMS([0.001,0.1], [0]*D), 
-           ZALMS([0.001,0.01], [0]*D), 
-          ZALMS([0.001,0.001], [0]*D), 
-         ZALMS([0.001,0.0001], [0]*D), 
-        ZALMS([0.001,0.00001], [0]*D),
-       ZALMS([0.001,0.000001], [0]*D), 
-      ZALMS([0.001,0.0000001], [0]*D),  ]
+  models = []
+  for i in range(10):
+    models.append(OnlineLinearLearning([5 ** -i], [0] * D))
 
   if validation :
     # model = Learning(params,w)

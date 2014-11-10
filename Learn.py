@@ -18,7 +18,9 @@ def trainModel(trainPath,model):
         if tt % refreshLine == 0:
           print('Model desc:' + model.description())
           print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, model.getLogLoss()))
+          print('\n')
         tt += 1
+
 
 def trainModels(trainPath,models):
     pool = Parallel(n_jobs = num_cores)

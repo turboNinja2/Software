@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 
-from Learn import *
-from OnlineLearningMethods import OnlineLinearLearning
-from Globals import D
-from datetime import datetime
-from DataOperations import *
-from ErrorEvaluation import *
+from Learn                  import *
+from OnlineLearningMethods  import OnlineLinearLearning
+from Globals                import D
+from datetime               import datetime
+from DataOperations         import *
+from ErrorEvaluation        import *
+from settings               import *
 
 # folders #################################################################
 dataPath = 'C:/Users/JUJulien/Desktop/KAGGLE/Competitions/Avazu/Data/'

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+
 from Learn import *
 from OnlineLearningMethods import OnlineLinearLearning
 from Globals import D

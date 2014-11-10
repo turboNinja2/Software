@@ -89,8 +89,6 @@ def createValidationSet(inputPath,filename,small=False):
   inputFile = inputPath + filename
   if small:
     inputPath += "small_"
-    print "ok"
-  print inputPath
   with open(inputPath + 'train_set.csv', 'w') as outfileTrain:
     with open(inputPath + 'validation_set.csv', 'w') as outfileValidation:
       for t, line in enumerate(open(inputFile)):

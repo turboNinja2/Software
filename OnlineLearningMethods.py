@@ -1,5 +1,7 @@
 from math import *
 from ErrorEvaluation import logloss
+from DataOperations import *
+from datetime import datetime
 
 class Model:
 
@@ -13,7 +15,7 @@ class Model:
       setattr(self, key, params[key])
 
   def __str__(self):
-   return "%s, params : %s" % (self.name, str(params))
+   return "%s, params : %s" % (self.name, str(self.params))
  
   # C.  Get probability estimation on x
   # INPUT:
@@ -30,6 +32,22 @@ class Model:
 
   def getLogLoss(self):
     return self.loss * 1. /  self.nbIterations
+
+
+  def train(self, trainPath,customRefreshLine=None):
+    if customRefreshLine is not None:
+      refreshLine = customRefreshLine
+    tt = 1
+    data = DataParser(trainPath) 
+    for ID, x, y in data.run():
+        self.update(x, y)
+        # print out progress, so that we know everything is working
+        if tt % refreshLine == 0:
+          print('Model desc:' + str(self))
+          print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
+        tt += 1
+
+
     
 
 class OnlineLinearLearning(Model):

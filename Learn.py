@@ -9,6 +9,7 @@ from multiprocessing import Pool
 from joblib import Parallel, delayed
 import multiprocessing
 
+"""
 def trainModel(trainPath,model):
     tt = 1
     data = DataParser(trainPath) 
@@ -19,7 +20,7 @@ def trainModel(trainPath,model):
           print('Model desc:' + model.description())
           print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, model.getLogLoss()))
         tt += 1
-
+"""
 def trainModels(trainPath,models):
     pool = Parallel(n_jobs = num_cores)
     pool(delayed(trainModel)(trainPath,model) for model in models)

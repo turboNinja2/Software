@@ -6,6 +6,7 @@ from Learn                  import *
 from ErrorEvaluation        import *
 from OnlineLearningMethods  import *
 
+refreshLine = 100
 
 params = {"alpha" : 0.1}   # learning rate for sgd optimization
 w = [0.] * D
@@ -19,7 +20,7 @@ expected = 0.167259060835432709423848
 
 
 model = Learning(params, w)
-trainModel(train, model)
+model.train(train,refreshLine)
 found = validationError(validation, model)
 
 #trainModels(train,[model] * 2)

@@ -31,7 +31,7 @@ if __name__ == '__main__':
     validationErrors(validation_set,models)
   if submit :
     model = Learning(params,w)
-    trainModel(train_global,model)
+    model.train(train_global)
     writeSubmission(dataPath,model)
 
   print('Hello World Juju and Ulysse')

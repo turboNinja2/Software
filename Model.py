@@ -133,4 +133,3 @@ class PA(Model):
     for i in x:
       self.w[i] -= tau * y * 1. 
 
-  def predict(self,x):

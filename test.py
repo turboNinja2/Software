@@ -4,7 +4,7 @@
 from settings               import *
 from Learn                  import *
 from ErrorEvaluation        import *
-from OnlineLearningMethods  import *
+from Model                  import *
 from Globals                import *
 
 refreshLine = 100

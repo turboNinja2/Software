@@ -31,6 +31,8 @@ class Model:
     return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
   
   def getLogLoss(self):
+    if self.loss == 0:
+      return 0
     return self.loss * 1. / self.nbIterations
 
   def run(self, trainPath,update=True,customRefreshLine=None):

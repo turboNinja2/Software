@@ -24,7 +24,7 @@ def validationError(validationPath,model):
     loss += logloss(p, y)  
 
     if tt % refreshLine == 0:
-      print('%s\tencountered: %d\tcurrent logloss: %f' % (
+      print('%s\tencountered: %d\t logloss: %f' % (
           datetime.now(), tt, (loss * 1./tt)))
     tt += 1
   return (loss * 1./tt)

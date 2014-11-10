@@ -8,24 +8,12 @@ from Globals import *
 #     ID: id of the instance (can also acts as instance count)
 #     x: a list of indices that its value is 1
 #     y: (if label_path is present) label value of y1 to y33
-def data(path, traindata=False):
-  d = DataParser(path)
-  d.run()
-  """
-    for t, line in enumerate(open(path)):
-        if t == 0:
-            x = [0] * 27
-            continue
-        for m, feat in enumerate(line.rstrip().split(',')):
-            if m == 0:
-                ID = int(feat)
-            elif traindata and m == 1:
-                y = float(feat)
-            else:
-                x[m] = abs(hash(str(m) + '_' + feat)) % D
 
-        yield (ID, x, y) if traindata else (ID, x)
-  """
+#########
+## TOOLS
+
+def strip_line(line):
+  return line.rstrip().split(',')
 
 
 class DataParser:
@@ -34,7 +22,7 @@ class DataParser:
   ## PARSING METHOD
 
   def classic(self, line, x):
-    for m, feat in enumerate(line.rstrip().split(',')):
+    for m, feat in enumerate(strip_line(line)):
       if m == 0:
         ID = int(feat)
       elif self.traindata and m == 1:
@@ -45,13 +33,13 @@ class DataParser:
 
   def cross_prod(self, line, x):
     i = 0 
-    for m1, feat1 in enumerate(line.rstrip().split(',')):
+    for m1, feat1 in enumerate(stip_line(line)):
       if m1 == 0:
         ID = int(feat1)
       elif self.traindata and m1 == 1:
         y = float(feat1)
       else:
-        for m2, feat2 in enumerate(line.rstrip().split(',')):
+        for m2, feat2 in enumerate(strip_line(line)):
           if m2 != 0 and not (self.traindata and m2 == 1):
             x[i] = abs(hash(str(m1) + '_' + feat1 + '_' + str(m2) + '_' + feat2)) %D
             i += 1
@@ -71,8 +59,10 @@ class DataParser:
   }
   ######################################################################
   ## CORE FUNCTIONS
-  def __init__(self, path, traindata=False, mode = "classic"):
+
+  def __init__(self, path, traindata=True, mode = "classic"):
     self.path = path
+    self.mode = mode
     self.parsing_method = self.PARSING_METHODS[mode]
     self.parsing_lenght = self.PARSING_LENGHT[mode]
     self.traindata = traindata

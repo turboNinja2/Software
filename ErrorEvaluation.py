@@ -1,8 +1,8 @@
 from Globals import *
 from math import log, exp
 from OnlineLearningMethods import OnlineLinearLearning
-from DataOperations import data
-from datetime import datetime
+from DataOperations import *
+from datetime import *
 
 # B. Bounded logloss
 # INPUT:
@@ -17,7 +17,8 @@ def logloss(p, y):
 def validationError(validationPath,model):
     loss = 0.
     tt = 1
-    for ID, x, y in data(validationPath, traindata = True):
+    data = DataParser(validationPath)
+    for ID, x, y in data.run():
         p = model.predict(x)
         loss += logloss(p, y)  
 

@@ -10,7 +10,7 @@ def trainModel(trainPath,model):
     n = [0.] * D
     loss = 0.
     tt = 1
-    data = DataParser(trainPath, traindata = True,mode= "classic") 
+    data = DataParser(trainPath) 
 
     
     for ID, x, y in data.run():

@@ -34,6 +34,7 @@ class Model:
     return self.loss * 1. / self.nbIterations
 
   def run(self, trainPath,update=True,customRefreshLine=None):
+    global refreshLine
     if customRefreshLine is not None:
       refreshLine = customRefreshLine
     tt = 1

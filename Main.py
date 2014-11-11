@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from Learn            import *
-from ErrorEvaluation  import *
 from settings         import *
 from Export           import writeSubmission
 from Model            import *
@@ -21,20 +19,22 @@ if __name__ == '__main__':
 
   model_list = []
   for i in range(5):
-    model_list.append(OnlineLinearLearning({"alpha" : 5 ** -i}, [0] * D))
+    model_list.append(OnlineLinearLearning(
+                  {"alpha" : 5 ** -i}, 
+                  [0] * D, 
+                  trainPath=train_set,
+                  validationPath=validation_set,
+                  refreshLine=refreshLine
+    ))
 
   if validation :
     # model = Learning(params,w)
     models = Models(model_list)
-    models.train(train_set)
-    models.validation(validation_set)
-    """
-    trainModels(train_set,models)
-    validationErrors(validation_set,models)
-    """
+    models.train()
+    models.validation()
   if submit :
-    model = Learning(params,w)
-    model.train(train_global)
+    model = Learning(params,w,train_global)
+    model.train()
     writeSubmission(dataPath,model)
 
   print('Hello World Juju and Ulysse')

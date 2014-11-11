@@ -1,17 +1,21 @@
-from math import *
-from ErrorEvaluation import logloss
+from math           import *
 from DataOperations import *
-from datetime import datetime
-from tools.misc import shrink, copysign
+from datetime       import datetime
+from tools.misc     import shrink, copysign,  logloss
 
 class Model:
-  def __init__(self, params, wInit, nbZeroesParser = 2):
-    self.params = params
-    self.w = wInit
-    self.nbIterations = 0
-    self.loss = 0
-    self.validation_loss = 0
-    self.name = "Unamed"
+
+  def __init__(self, params, wInit, trainPath=None,validationPath=None, refreshLine = None,
+               nbZeroesParser = 2):
+    self.params           = params
+    self.w                = wInit
+    self.nbIterations     = 0
+    self.loss             = 0
+    self.validation_loss  = 0
+    self.name             = "Unamed"
+    self.trainPath        = trainPath
+    self.validationPath   = validationPath
+    self.refreshLine      = refreshLine
     self.nbZeroes = nbZeroesParser
     for key in params.keys():
       setattr(self, key, params[key])
@@ -36,51 +40,63 @@ class Model:
       return 0
     return self.loss * 1. / self.nbIterations
 
-  def run(self, trainPath,update=True,customRefreshLine=None):
-    global refreshLine
-    if customRefreshLine is not None:
-      refreshLine = customRefreshLine
+  def train(self):
+    path = self.trainPath
+    self.run_data(path,update=True)
+ 
+  def validate(self):
+    path = self.validationPath
+    return self.run_data(path,False)
 
+  def run_data(self, path,update=False):
     tt = 1
-    data = DataParser(trainPath,nbZeroes = self.nbZeroes)
-    self.validation_loss = 0
+    data = DataParser(path)
+    validation_loss = 0
     for ID, x, y in data.run():
-      if update: 
+      if update:
         self.update(x, y)
       else:
         p = self.predict(x)
         self.validation_loss += logloss(p,y)
-      # print out progress, so that we know everything is working
-      if tt % refreshLine == 0:
-        print('Model desc:' + str(self))
-        print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
+      self.refreshed(tt)
       tt += 1
-    if not update:
-      return self.validation_loss * 1. / tt
+    return self.validation_loss * 1. / tt
+
+  def refreshed(self, tt):
+    if tt % self.refreshLine == 0:
+      print('Model desc:' + str(self))
+      print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
+ 
+  def update(self,x,y):
+    self.pretrement(x)
+    p = self.predict(x)
+    self.nbIterations += 1
+    self.loss += logloss(p,y)
+    self.loop(p,x,y)
+
+  def pretrement(self,x):
+    pass   
+
+  def loop(self,p,y,x):
+    raise Exception("Undefined method loop")
 
 class OnlineLinearLearning(Model):
-  def __init__(self,params,wInit):
-    Model.__init__(self,params, wInit)
+  def __init__(self,params,wInit,**kwargs):
+    Model.__init__(self,params, wInit,**kwargs)
     self.n = [0] * len(wInit)
     self.name = "Online method"
 
-  def update(self, x, y):
-    p = self.predict(x)
-    self.nbIterations += 1
-    self.loss += logloss(p, y)  # for progressive validation
+  def loop(self,p,x,y):
     for i in x:
       self.n[i] += abs(p - y)
       self.w[i] -= (p - y) * 1. * self.alpha / sqrt(self.n[i])
 
 class ZALMS(Model):
-  def __init__(self,params,wInit):
-    Model.__init__(self,params, wInit)
+  def __init__(self,params,wInit,**kwargs):
+    Model.__init__(self,params, wInit,**kwargs)
     self.name = "ZALMS"
 
-  def update(self, x, y):
-    p = self.predict(x)
-    self.nbIterations += 1
-    self.loss += logloss(p, y)  # for progressive validation
+  def loop(self,p,x,y):
     for i in x:
       self.w[i] -= self.delta * ((p - y) * 1. + self.rho * copysign(self.w[i],1))
 
@@ -89,10 +105,7 @@ class OLBI(Model):
     Model.__init__(self,params, wInit)
     self.name = "OLBI"
 
-  def update(self, x, y):
-    p = self.predict(x)
-    self.nbIterations += 1
-    self.loss += logloss(p, y)  # for progressive validation
+  def loop(self,p,x,y):
     for i in x:
       self.w[i] -= self.delta * (p - y) * 1. 
       self.w[i] = shrink(self.w[i], self.gamma) 

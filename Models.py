@@ -1,20 +1,22 @@
 from joblib   import Parallel, delayed
 from settings import *
 
-def update_model(model, path):
-  return model.run(path)
 
-def run_model(model,path):
-  return model.run(path,update=False)
+
+def update_model(model):
+  model.train()
+
+def run_model(model):
+  return model.validate()
 
 class Models:
   def __init__(self, models):
     self.models = models
 
-  def train(self, trainPath):
+  def train(self):
     pool= Parallel(n_jobs = num_cores)
-    pool(delayed(update_model)(model,trainPath) for model in self.models)
+    pool(delayed(update_model)(model) for model in self.models)
 
-  def validation(self, validationPath):
+  def validation(self):
     pool = Parallel(n_jobs = num_cores)
-    pool(delayed(run_model)(model,validationPath) for model in self.models)
+    pool(delayed(run_model)(model) for model in self.models)

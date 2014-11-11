@@ -1,28 +1,26 @@
 #!/usr/bin/env python
 
 from settings               import *
-from ErrorEvaluation        import *
 from Model                  import *
 from Models                 import *
 from Globals                import *
 
-refreshLineTest = 150
 MULTI = False
 
 params = {"alpha" : 0.1}   # learning rate for sgd optimization
+#params = {"delta" : 0.1, "rho" : 0.1}
 w = [0.] * D
 Learning = OnlineLinearLearning
+#Learning = ZALMS
 
 train       = dataPath + "small_train_set.csv"
 validation  = dataPath + "small_validation_set.csv"
 
 expected = 0.167259060835432709423848
 
-model = Learning(params, w)
-model.run(train,customRefreshLine=refreshLine)
-found = model.run(validation,customRefreshLine=refreshLineTest,update=False)
-
-#trainModels(train,[model] * 2)
+model = Learning(params, w, trainPath=train, validationPath=validation, refreshLine=150)
+model.train()
+found = model.validate()
 
 if found == expected:
   print("We're Good !")

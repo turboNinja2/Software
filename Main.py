@@ -17,8 +17,6 @@ if __name__ == '__main__':
   # training and testing
   # #######################################################
 
-  model = PA({}, [0] * D)
-
   model_list = []
 
   for i in range(5):

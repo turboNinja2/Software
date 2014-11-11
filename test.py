@@ -5,7 +5,7 @@ from Model                  import *
 from Models                 import *
 from Globals                import *
 
-MULTI = False
+MULTI = True
 
 params = {"alpha" : 0.1}   # learning rate for sgd optimization
 #params = {"delta" : 0.1, "rho" : 0.1}
@@ -28,7 +28,18 @@ else:
   print("Houston, we got a problem. Found : %s, Expected : %s" % (found, expected))
 
 if MULTI:
-  model_list = [Learning(params, w)] * 2
+  model_list = []
+  for i in range(5):
+    model_list.append(
+      OnlineLinearLearning(
+                  {"alpha" : 5 ** -i}, 
+                  [0] * D, 
+                  trainPath=train,
+                  validationPath=validation,
+                  refreshLine=150
+    )
+  )
+
   models = Models(model_list)
-  models.train(train)
-  models.validation(validation)
+  models.train()
+  models.validation()

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from settings               import *
-from Learn                  import *
 from ErrorEvaluation        import *
 from Model                  import *
 from Models                 import *

@@ -5,13 +5,14 @@ from datetime import datetime
 from tools.misc import shrink, copysign
 
 class Model:
-  def __init__(self, params, wInit):
+  def __init__(self, params, wInit, nbZeroesParser = 2):
     self.params = params
     self.w = wInit
     self.nbIterations = 0
     self.loss = 0
     self.validation_loss = 0
     self.name = "Unamed"
+    self.nbZeroes = nbZeroesParser
     for key in params.keys():
       setattr(self, key, params[key])
 
@@ -41,7 +42,7 @@ class Model:
       refreshLine = customRefreshLine
 
     tt = 1
-    data = DataParser(trainPath)
+    data = DataParser(trainPath,nbZeroes = self.nbZeroes)
     self.validation_loss = 0
     for ID, x, y in data.run():
       if update: 
@@ -137,4 +138,3 @@ class PAI(Model):
     wTx,_ = self.innerProduct(x)
     p = (1 + copysign(1,wTx)) / 2.
     return p
-

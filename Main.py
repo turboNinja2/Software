@@ -1,14 +1,11 @@
 #!/usr/bin/env python
-from Learn          import *
-from ErrorEvaluation    import *
+from ErrorEvaluation  import *
 from settings         import *
-from Export import writeSubmission
-from Model import *
-from Models import *
-
+from Export           import writeSubmission
+from Model            import *
+from Models           import *
 
 if __name__ == '__main__':
-
   import test
 
   # folders #################################################################
@@ -23,11 +20,12 @@ if __name__ == '__main__':
   model = PA({}, [0] * D)
 
   model_list = []
-  for i in range(5):
-    model_list.append(PAI({"C" : 5 ** -i}, [0] * D))
+  for i in range(6):
+    model_list.append(OLBI({"delta" : 0.01,
+                            "gamma" : 0.00001,
+                           "nbZeroesParser" : i }, [0] * D))
 
   if validation :
-    # model = Learning(params,w)
     models = Models(model_list)
     models.train(train_set)
     models.validation(validation_set)

@@ -1,20 +1,15 @@
 from joblib   import Parallel, delayed
 from settings import *
 
-
-
 def update_model(model, path):
   return model.run(path)
 
 def run_model(model,path):
   return model.run(path,update=False)
 
-
 class Models:
-  
   def __init__(self, models):
     self.models = models
-
 
   def train(self, trainPath):
     pool= Parallel(n_jobs = num_cores)

@@ -85,10 +85,17 @@ def countLines(path):
     nbLines +=1
   return(nbLines)
 
-def createValidationSet(inputPath,filename,small=False):
+def createValidationSet(inputPath,filename,small=False,medium=False):
+  size = 4*pow(10,7)
+  if small:
+    size = pow(10,2)
+  elif medium:
+    size = 2*pow(10,6)
   inputFile = inputPath + filename
   if small:
     inputPath += "small_"
+  elif medium:
+    inputPath += "medium_"
   with open(inputPath + 'train_set.csv', 'w') as outfileTrain:
     with open(inputPath + 'validation_set.csv', 'w') as outfileValidation:
       for t, line in enumerate(open(inputFile)):
@@ -97,14 +104,9 @@ def createValidationSet(inputPath,filename,small=False):
           outfileTrain.write(header)
           outfileValidation.write(header)
           continue
-        if small:
-          if t < 100:
-            outfileTrain.write(line)
-          elif t > 200:
-           return
-          else:
-            outfileValidation.write(line)
-        if t < 40000000:
+        if t < size:
           outfileTrain.write(line)
+        elif t > (size*4/3):
+          return
         else:
           outfileValidation.write(line)

@@ -5,13 +5,13 @@ from Model                  import *
 from Models                 import *
 from Globals                import *
 
-MULTI = True
+MULTI = False
 
 Learning = OnlineLinearLearning
 
 train = dataPath + "small_train_set.csv"
 validation = dataPath + "small_validation_set.csv"
-dump = dataPath + "Results/test_results.csv"
+dump = dataPath + "results/test_results.csv"
 
 
 expected = 0.167259060835432709423848

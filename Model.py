@@ -7,9 +7,14 @@ class Model:
 
   ####################################################################################
   ## INIT FUNCTIONS
-  def __init__(self, params, wInit, trainPath=None,validationPath=None, refreshLine = None,
-               nbZeroesParser = 2,
-               dumpingPath = None):
+  def __init__(self, params, wInit, 
+                trainPath       = None,
+                validationPath  = None, 
+                refreshLine     = None,
+                nbZeroesParser  = 2,
+                dumpingPath     = None,
+                parser_mode     = "classic",
+              ):
     self.params           = params
     self.w                = wInit
     self.nbIterations     = 0
@@ -23,6 +28,7 @@ class Model:
     self.refreshLine      = refreshLine
     self.nbZeroes         = nbZeroesParser
     self.score            = None
+    self.parser_mode      = parser_mode
     for key in params.keys():
       setattr(self, key, params[key])
 
@@ -54,9 +60,10 @@ class Model:
     return self.score
  
   def dumping_string(self):
-    model_desc = str(self)
-    score = self.get_score()
-    to_dump = model_desc + ", score : %s\n" % (score,)
+    model_desc  = str(self)
+    score       = self.get_score()
+    logLoss     = self.getLogLoss()
+    to_dump     = model_desc + ", NbZeroes : %s, Parser Mode : %s, score : %s, logLoss : %s\n" % (self.nbZeroes,self.parser_mode,score,logLoss)
     return to_dump
 
 

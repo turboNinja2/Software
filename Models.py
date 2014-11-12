@@ -30,6 +30,7 @@ class Models:
     """
     for model in self.models :
       model.validate()
+    
 
   def dump(self):
     """"

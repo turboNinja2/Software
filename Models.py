@@ -11,30 +11,32 @@ def run_model(model):
 def dump_model(model):
   model.dump_score()
 
+
 class Models:
   def __init__(self, models):
     self.models = models
+    self.para   = False
 
   def train(self):
-    """
-    pool = Parallel(n_jobs = num_cores)
-    pool(delayed(update_model)(model) for model in self.models)
-    """
-    for model in self.models :
-      model.train()
+    if self.para:
+      pool = Parallel(n_jobs = num_cores)
+      pool(delayed(update_model)(model) for model in self.models)
+    else:
+      for model in self.models :
+        model.train()
 
   def validation(self):
-    """"
-    pool = Parallel(n_jobs = num_cores)
-    pool(delayed(run_model)(model) for model in self.models)
-    """
-    for model in self.models :
-      model.validate()
+    if self.para:
+      pool = Parallel(n_jobs = num_cores)
+      pool(delayed(run_model)(model) for model in self.models)
+    else:
+      for model in self.models :
+        model.validate()
 
   def dump(self):
-    """"
-    pool = Parallel(n_jobs = num_cores)
-    pool(delayed(dump_model)(model) for model in self.models)
-    """
-    for model in self.models :
-      model.dump_score()
+    if self.para:
+      pool = Parallel(n_jobs = num_cores)
+      pool(delayed(dump_model)(model) for model in self.models)
+    else:
+      for model in self.models :
+        model.dump_score()

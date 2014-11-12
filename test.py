@@ -36,7 +36,7 @@ if MULTI:
   model_list = []
   for i in range(6):
     model_list.append(OnlineLinearLearning({"alpha" : 10 ** (-i)}, 
-                  [0] * D, 
+                  [0] * D,
                   trainPath=train,
                   validationPath=validation,
                   refreshLine=50,

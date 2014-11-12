@@ -81,7 +81,7 @@ class DataParser:
   ######################################################################
   ## CORE FUNCTIONS
 
-  def __init__(self, path, traindata=True, mode="classic2", nbZeroes=2):
+  def __init__(self, path, traindata=True, mode="classic", nbZeroes=2):
     self.path = path
     self.mode = mode
     self.parsing_method = self.PARSING_METHODS[mode]

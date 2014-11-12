@@ -19,10 +19,10 @@ dump        = dataPath + "../results/test_results.csv"
 
 expected = 0.167259060835432709423848
 
-model = Learning(params, w, trainPath=train, validationPath=validation, refreshLine=150)
+model = Learning(params, w, trainPath=train, validationPath=validation, refreshLine=150, dumpingPath = dump)
 model.train()
 found = model.validate()
-model.dump_score(dump)
+model.dump_score()
 
 if found == expected:
   print("We're Good !")
@@ -38,10 +38,12 @@ if MULTI:
                   [0] * D, 
                   trainPath=train,
                   validationPath=validation,
-                  refreshLine=150
+                  refreshLine=150,
+                  dumpingPath=dump,
     )
   )
 
   models = Models(model_list)
   models.train()
   models.validation()
+  models.dump()

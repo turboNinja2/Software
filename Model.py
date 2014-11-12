@@ -8,7 +8,8 @@ class Model:
   ####################################################################################
   ## INIT FUNCTIONS
   def __init__(self, params, wInit, trainPath=None,validationPath=None, refreshLine = None,
-               nbZeroesParser = 2):
+               nbZeroesParser = 2,
+               dumpingPath = None):
     self.params           = params
     self.w                = wInit
     self.nbIterations     = 0
@@ -17,6 +18,7 @@ class Model:
     self.name             = "Unamed"
     self.trainPath        = trainPath
     self.validationPath   = validationPath
+    self.dumpingPath      = dumpingPath
     self.refreshLine      = refreshLine
     self.nbZeroes         = nbZeroesParser
     self.score            = None
@@ -81,10 +83,10 @@ class Model:
   def __str__(self):
    return "%s, params : %s" % (self.name, str(self.params))
 
-  def dump_score(self,output_path):
+  def dump_score(self):
     dumping_string = self.dumping_string()
     try:
-      f = open(output_path,'a')
+      f = open(self.dumpingPath,'a')
       f.write(dumping_string)
       f.close()
     except:

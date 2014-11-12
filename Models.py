@@ -13,9 +13,10 @@ class Models:
     self.models = models
 
   def train(self):
-    pool= Parallel(n_jobs = num_cores)
+    pool = Parallel(n_jobs = num_cores)
     pool(delayed(update_model)(model) for model in self.models)
 
   def validation(self):
     pool = Parallel(n_jobs = num_cores)
     pool(delayed(run_model)(model) for model in self.models)
+

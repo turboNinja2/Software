@@ -7,18 +7,17 @@ from Globals                import *
 
 MULTI = True
 
-params = {"alpha" : 0.1}   # learning rate for sgd optimization
-#params = {"delta" : 0.1, "rho" : 0.1}
-w = [0.] * D
 Learning = OnlineLinearLearning
-#Learning = ZALMS
-
-train       = dataPath + "small_train_set.csv"
-validation  = dataPath + "small_validation_set.csv"
+train = dataPath + "small_train_set.csv"
+validation = dataPath + "small_validation_set.csv"
 
 expected = 0.167259060835432709423848
 
-model = Learning(params, w, trainPath=train, validationPath=validation, refreshLine=150)
+model = Learning({"alpha" : 0.1}, 
+                 [0.] * D, 
+                 trainPath=train, 
+                 validationPath=validation, 
+                 refreshLine=200)
 model.train()
 found = model.validate()
 
@@ -29,17 +28,30 @@ else:
 
 if MULTI:
   model_list = []
-  for i in range(5):
-    model_list.append(
-      OnlineLinearLearning(
-                  {"alpha" : 5 ** -i}, 
+  for i in range(6):
+    model_list.append(OnlineLinearLearning({"alpha" : 10 ** (-i)}, 
                   [0] * D, 
                   trainPath=train,
                   validationPath=validation,
-                  refreshLine=150
-    )
-  )
+                  refreshLine=100))
 
   models = Models(model_list)
   models.train()
   models.validation()
+
+print("Test ended")
+
+"""
+class Caca:
+  def __init__(self, bite):
+    self.inner = bite
+
+def modify_caca(test_caca):
+  test_caca.inner = "couille"
+
+zizi = Caca("chatte")
+print(zizi.inner)
+modify_caca(zizi)
+print(zizi.inner)
+print(" test ok")
+"""

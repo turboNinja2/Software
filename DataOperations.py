@@ -28,7 +28,7 @@ class DataParser:
  
   ######################################################################
   ## PARSING METHOD
-  def classic(self, line, nbZeroes = 2):
+  def classic(self, line, nbZeroes=2):
     x = [0] * nbZeroes
     for m, feat in enumerate(strip_line(line)):
       if m == 0:
@@ -39,7 +39,7 @@ class DataParser:
         x.append(abs(hash(str(m) + '_' + feat)) % D)
     return (ID, x, y)
 
-  def classic2(self, line, nbZeroes = 1):
+  def classic2(self, line, nbZeroes=1):
     x = [0] * nbZeroes
     for m, feat in enumerate(strip_line(line)):
       if self.header[m] == "id":
@@ -81,7 +81,7 @@ class DataParser:
   ######################################################################
   ## CORE FUNCTIONS
 
-  def __init__(self, path, traindata=True, mode="classic", nbZeroes = 2):
+  def __init__(self, path, traindata=True, mode="classic2", nbZeroes=2):
     self.path = path
     self.mode = mode
     self.parsing_method = self.PARSING_METHODS[mode]
@@ -106,11 +106,11 @@ def countLines(path):
   return(nbLines)
 
 def createValidationSet(inputPath,filename,small=False,medium=False):
-  size = 4*pow(10,7)
+  size = 4 * pow(10,7)
   if small:
     size = pow(10,2)
   elif medium:
-    size = 2*pow(10,6)
+    size = 2 * pow(10,6)
   inputFile = inputPath + filename
   if small:
     inputPath += "small_"
@@ -126,7 +126,7 @@ def createValidationSet(inputPath,filename,small=False,medium=False):
           continue
         if t < size:
           outfileTrain.write(line)
-        elif t > (size*4/3):
+        elif t > (size * 4 / 3):
           return
         else:
           outfileValidation.write(line)

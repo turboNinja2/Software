@@ -19,7 +19,7 @@ class Model:
     self.validationPath   = validationPath
     self.refreshLine      = refreshLine
     self.nbZeroes         = nbZeroesParser
-    self.performance      = None
+    self.score            = None
     for key in params.keys():
       setattr(self, key, params[key])
 
@@ -32,10 +32,17 @@ class Model:
       return 0
     return self.loss * 1. / self.nbIterations
 
-  def get_performance(self):
-    if self.performance is None:
+  def get_score(self):
+    if self.score is None:
       raise Exception("Not computed yet")
-    return self.performance
+    return self.score
+ 
+  def dumping_string(self):
+    model_desc = str(self)
+    score = self.get_score()
+    to_dump = model_desc + ", score : %s\n" % (score,)
+    return to_dump
+
 
   ####################################################################################
   ## RUNNING FUNCTIONS
@@ -46,8 +53,8 @@ class Model:
  
   def validate(self):
     path = self.validationPath
-    self.performance = self.run_data(path,False)
-    return self.performance
+    self.score = self.run_data(path,False)
+    return self.score
 
   def run_data(self, path,update=False):
     tt = 1
@@ -63,7 +70,6 @@ class Model:
       tt += 1
     return self.validation_loss * 1. / tt
 
-
   ####################################################################################
   ## PRINTING FUNCTIONS
 
@@ -74,7 +80,18 @@ class Model:
  
   def __str__(self):
    return "%s, params : %s" % (self.name, str(self.params))
- 
+
+  def dump_score(self,output_path):
+    dumping_string = self.dumping_string()
+    try:
+      f = open(output_path,'a')
+      f.write(dumping_string)
+      f.close()
+    except:
+      f = open(str(self),"a")
+      f.write(dumping_string)
+      f.close()
+    
   ####################################################################################
   ## CORE FUNCTIONS
 

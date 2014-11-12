@@ -15,12 +15,14 @@ Learning = OnlineLinearLearning
 
 train       = dataPath + "small_train_set.csv"
 validation  = dataPath + "small_validation_set.csv"
+dump        = dataPath + "../results/test_results.csv"
 
 expected = 0.167259060835432709423848
 
 model = Learning(params, w, trainPath=train, validationPath=validation, refreshLine=150)
 model.train()
 found = model.validate()
+model.dump_score(dump)
 
 if found == expected:
   print("We're Good !")

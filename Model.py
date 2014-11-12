@@ -5,6 +5,8 @@ from tools.misc     import shrink, copysign,  logloss
 
 class Model:
 
+  ####################################################################################
+  ## INIT FUNCTIONS
   def __init__(self, params, wInit, trainPath=None,validationPath=None, refreshLine = None,
                nbZeroesParser = 2):
     self.params           = params
@@ -17,20 +19,10 @@ class Model:
     self.trainPath        = trainPath
     self.validationPath   = validationPath
     self.refreshLine      = refreshLine
-    self.nbZeroes = nbZeroesParser
+    self.nbZeroes         = nbZeroesParser
+    self.score            = None
     for key in params.keys():
       setattr(self, key, params[key])
-
-  def __str__(self):
-   return "%s, params : %s" % (self.name, str(self.params))
- 
-  def innerProduct(self,x):
-    wTx = 0.
-    n = 0
-    for i in x:  # do wTx
-      wTx += self.w[i] * 1.  # w[i] * x[i], but if i in x we got x[i] = 1.
-      n+=1
-    return wTx,n
 
   def predict(self, x):
     wTx,_ = self.innerProduct(x)
@@ -40,6 +32,9 @@ class Model:
     p = self.predict(x)
     self.validation_loss += logloss(p,y)
     self.nbIterationsValidation += 1
+
+  ####################################################################################
+  ## GETTING FUCNTIONS
 
   def getLogLoss(self):
     if self.loss == 0:
@@ -51,13 +46,30 @@ class Model:
       return 0
     return self.validation_loss * 1. / self.nbIterationsValidation
 
+  def get_score(self):
+    if self.score is None:
+      raise Exception("Not computed yet")
+    return self.score
+ 
+  def dumping_string(self):
+    model_desc = str(self)
+    score = self.get_score()
+    to_dump = model_desc + ", score : %s\n" % (score,)
+    return to_dump
+
+
+  ####################################################################################
+  ## RUNNING FUNCTIONS
+
+
   def train(self):
     path = self.trainPath
     self.run_data(path,update=True)
  
   def validate(self):
     path = self.validationPath
-    return self.run_data(path,False)
+    self.score = self.run_data(path,False)
+    return self.score
 
   def run_data(self, path,update=False):
     tt = 1
@@ -79,6 +91,37 @@ class Model:
         print('%s\tencountered: %d\t training loss: %f' % (datetime.now(), tt, self.getLogLoss()))
       else:
         print('%s\tencountered: %d\t validation loss: %f' % (datetime.now(), tt, self.getValidationLogLoss()))
+  ####################################################################################
+  ## PRINTING FUNCTIONS
+
+  def __str__(self):
+   return "%s, params : %s" % (self.name, str(self.params))
+
+  def dump_score(self,output_path):
+    dumping_string = self.dumping_string()
+    try:
+      f = open(output_path,'a')
+      f.write(dumping_string)
+      f.close()
+    except:
+      f = open(str(self),'a')
+      f.write(dumping_string)
+      f.close()
+    
+  ####################################################################################
+  ## CORE FUNCTIONS
+
+  def innerProduct(self,x):
+    wTx = 0.
+    n = 0
+    for i in x:  # do wTx
+      wTx += self.w[i] * 1.  # w[i] * x[i], but if i in x we got x[i] = 1.
+      n+=1
+    return wTx,n
+
+  def predict(self, x):
+    wTx,_ = self.innerProduct(x)
+    return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
 
   def update(self,x,y):
     self.pretrement(x)
@@ -92,6 +135,10 @@ class Model:
 
   def loop(self,p,y,x):
     raise Exception("Undefined method loop")
+
+######################################################################################
+## CUSTOM MODELS
+
 
 class OnlineLinearLearning(Model):
   def __init__(self,params,wInit,**kwargs):

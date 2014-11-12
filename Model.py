@@ -5,6 +5,8 @@ from tools.misc     import shrink, copysign,  logloss
 
 class Model:
 
+  ####################################################################################
+  ## INIT FUNCTIONS
   def __init__(self, params, wInit, trainPath=None,validationPath=None, refreshLine = None,
                nbZeroesParser = 2):
     self.params           = params
@@ -16,29 +18,27 @@ class Model:
     self.trainPath        = trainPath
     self.validationPath   = validationPath
     self.refreshLine      = refreshLine
-    self.nbZeroes = nbZeroesParser
+    self.nbZeroes         = nbZeroesParser
+    self.performance      = None
     for key in params.keys():
       setattr(self, key, params[key])
 
-  def __str__(self):
-   return "%s, params : %s" % (self.name, str(self.params))
- 
-  def innerProduct(self,x):
-    wTx = 0.
-    n = 0
-    for i in x:  # do wTx
-      wTx += self.w[i] * 1.  # w[i] * x[i], but if i in x we got x[i] = 1.
-      n+=1
-    return wTx,n
 
-  def predict(self, x):
-    wTx,_ = self.innerProduct(x)
-    return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
-  
+  ####################################################################################
+  ## GETTING FUCNTIONS
+ 
   def getLogLoss(self):
     if self.loss == 0:
       return 0
     return self.loss * 1. / self.nbIterations
+
+  def get_performance(self):
+    if self.performance is None:
+      raise Exception("Not computed yet")
+    return self.performance
+
+  ####################################################################################
+  ## RUNNING FUNCTIONS
 
   def train(self):
     path = self.trainPath
@@ -46,7 +46,8 @@ class Model:
  
   def validate(self):
     path = self.validationPath
-    return self.run_data(path,False)
+    self.performance = self.run_data(path,False)
+    return self.performance
 
   def run_data(self, path,update=False):
     tt = 1
@@ -62,11 +63,34 @@ class Model:
       tt += 1
     return self.validation_loss * 1. / tt
 
+
+  ####################################################################################
+  ## PRINTING FUNCTIONS
+
   def refreshed(self, tt):
     if tt % self.refreshLine == 0:
       print('Model desc:' + str(self))
       print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
  
+  def __str__(self):
+   return "%s, params : %s" % (self.name, str(self.params))
+ 
+  ####################################################################################
+  ## CORE FUNCTIONS
+
+  def innerProduct(self,x):
+    wTx = 0.
+    n = 0
+    for i in x:  # do wTx
+      wTx += self.w[i] * 1.  # w[i] * x[i], but if i in x we got x[i] = 1.
+      n+=1
+    return wTx,n
+
+  def predict(self, x):
+    wTx,_ = self.innerProduct(x)
+    return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
+
+
   def update(self,x,y):
     self.pretrement(x)
     p = self.predict(x)
@@ -79,6 +103,10 @@ class Model:
 
   def loop(self,p,y,x):
     raise Exception("Undefined method loop")
+
+######################################################################################
+## CUSTOM MODELS
+
 
 class OnlineLinearLearning(Model):
   def __init__(self,params,wInit,**kwargs):

@@ -16,15 +16,12 @@ dump        = dataPath + "results/test_results.csv"
 
 expected = 0.167259060835432709423848
 
-<<<<<<< HEAD
-model = Learning(params, w, trainPath=train, validationPath=validation, refreshLine=150, dumpingPath = dump)
-=======
+
 model = Learning({"alpha" : 0.1}, 
                  [0.] * D, 
                  trainPath=train, 
                  validationPath=validation, 
                  refreshLine=200)
->>>>>>> 8b1d7a1a70a4684b93ca38cb9ea4134009369dd4
 model.train()
 found = model.validate()
 model.dump_score()

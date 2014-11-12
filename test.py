@@ -45,17 +45,3 @@ if MULTI:
 
 print("Test ended")
 
-"""
-class Caca:
-  def __init__(self, bite):
-    self.inner = bite
-
-def modify_caca(test_caca):
-  test_caca.inner = "couille"
-
-zizi = Caca("chatte")
-print(zizi.inner)
-modify_caca(zizi)
-print(zizi.inner)
-print(" test ok")
-"""

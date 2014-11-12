@@ -16,13 +16,25 @@ class Models:
     self.models = models
 
   def train(self):
+    """
     pool = Parallel(n_jobs = num_cores)
     pool(delayed(update_model)(model) for model in self.models)
+    """
+    for model in self.models :
+      model.train()
 
   def validation(self):
+    """"
     pool = Parallel(n_jobs = num_cores)
     pool(delayed(run_model)(model) for model in self.models)
+    """
+    for model in self.models :
+      model.validate()
 
   def dump(self):
+    """"
     pool = Parallel(n_jobs = num_cores)
     pool(delayed(dump_model)(model) for model in self.models)
+    """
+    for model in self.models :
+      model.dump_score()

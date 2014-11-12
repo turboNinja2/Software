@@ -50,7 +50,7 @@ class Model:
 
   def get_score(self):
     if self.score is None:
-      raise Exception("Not computed yet")
+      raise "Caca !"
     return self.score
  
   def dumping_string(self):
@@ -62,7 +62,6 @@ class Model:
 
   ####################################################################################
   ## RUNNING FUNCTIONS
-
 
   def train(self):
     path = self.trainPath

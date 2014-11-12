@@ -19,14 +19,13 @@ if __name__ == '__main__':
 
   model_list = []
 
-  for i in range(5):
-    model_list.append(OnlineLinearLearning(
-                  {"alpha" : 5 ** -i}, 
-                  [0] * D, 
-                  trainPath=train_set,
-                  validationPath=validation_set,
-                  refreshLine=refreshLine
-    ))
+  for j in range(0,6):
+    for i in range(1,6):
+      model_list.append(OLBI({"delta" : 0.1 * 10 ** (-j), "gamma" : 10 ** (-i - j - 1) }, 
+                    [0] * D, 
+                    trainPath=train_set,
+                    validationPath=validation_set,
+                    refreshLine=refreshLine))
 
   if validation :
     models = Models(model_list)

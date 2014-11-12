@@ -13,6 +13,7 @@ class Model:
     self.params           = params
     self.w                = wInit
     self.nbIterations     = 0
+    self.nbIterationsValidation     = 0
     self.loss             = 0
     self.validation_loss  = 0
     self.name             = "Unamed"
@@ -25,14 +26,27 @@ class Model:
     for key in params.keys():
       setattr(self, key, params[key])
 
+  def predict(self, x):
+    wTx,_ = self.innerProduct(x)
+    return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
+  
+  def innerValidation(self,x,y):        
+    p = self.predict(x)
+    self.validation_loss += logloss(p,y)
+    self.nbIterationsValidation += 1
 
   ####################################################################################
   ## GETTING FUCNTIONS
- 
+
   def getLogLoss(self):
     if self.loss == 0:
       return 0
     return self.loss * 1. / self.nbIterations
+
+  def getValidationLogLoss(self):
+    if self.validation_loss == 0:
+      return 0
+    return self.validation_loss * 1. / self.nbIterationsValidation
 
   def get_score(self):
     if self.score is None:
@@ -48,6 +62,7 @@ class Model:
 
   ####################################################################################
   ## RUNNING FUNCTIONS
+
 
   def train(self):
     path = self.trainPath
@@ -66,20 +81,21 @@ class Model:
       if update:
         self.update(x, y)
       else:
-        p = self.predict(x)
-        self.validation_loss += logloss(p,y)
-      self.refreshed(tt)
+        self.innerValidation(x,y)
+      self.refreshed(tt,update)
       tt += 1
     return self.validation_loss * 1. / tt
 
+  def refreshed(self, tt, update):
+    if tt % self.refreshLine == 0:
+      print('Model desc:' + str(self))
+      if update:
+        print('%s\tencountered: %d\t training loss: %f' % (datetime.now(), tt, self.getLogLoss()))
+      else:
+        print('%s\tencountered: %d\t validation loss: %f' % (datetime.now(), tt, self.getValidationLogLoss()))
   ####################################################################################
   ## PRINTING FUNCTIONS
 
-  def refreshed(self, tt):
-    if tt % self.refreshLine == 0:
-      print('Model desc:' + str(self))
-      print('%s\tencountered: %d\t logloss: %f' % (datetime.now(), tt, self.getLogLoss()))
- 
   def __str__(self):
    return "%s, params : %s" % (self.name, str(self.params))
 
@@ -90,7 +106,7 @@ class Model:
       f.write(dumping_string)
       f.close()
     except:
-      f = open(str(self),"a")
+      f = open(str(self),'a')
       f.write(dumping_string)
       f.close()
     
@@ -108,7 +124,6 @@ class Model:
   def predict(self, x):
     wTx,_ = self.innerProduct(x)
     return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
-
 
   def update(self,x,y):
     self.pretrement(x)
@@ -148,8 +163,8 @@ class ZALMS(Model):
       self.w[i] -= self.delta * ((p - y) * 1. + self.rho * copysign(self.w[i],1))
 
 class OLBI(Model):
-  def __init__(self,params,wInit):
-    Model.__init__(self,params, wInit)
+  def __init__(self,params,wInit,**kwargs):
+    Model.__init__(self,params, wInit,**kwargs)
     self.name = "OLBI"
 
   def loop(self,p,x,y):

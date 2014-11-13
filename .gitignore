@@ -2,3 +2,4 @@
 *.pyproj
 *.swp
 settings.py
+data/

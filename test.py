@@ -34,7 +34,7 @@ else:
 
 if MULTI:
   model_list = []
-  for i in range(6):
+  for i in range(num_cores):
     model_list.append(OnlineLinearLearning({"alpha" : 10 ** (-i)}, 
                   [0] * D,
                   trainPath=train,

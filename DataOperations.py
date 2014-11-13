@@ -1,17 +1,10 @@
-from Globals import *
+from Globals          import *
 from FeatureFunctions import *
 
-# A.  x, y generator
-# INPUT:
-#   path: path to train.csv or test.csv
-#   label_path: (optional) path to trainLabels.csv
-# YIELDS:
-#   ID: id of the instance (can also acts as instance count)
-#   x: a list of indices that its value is 1
-#   y: (if label_path is present) label value of y1 to y33
 
-#########
+########################################################################
 ## TOOLS
+
 def strip_line(line):
   return line.rstrip().split(',')
 
@@ -69,26 +62,26 @@ class DataParser:
 
   PARSING_METHODS = {
     "classic"     : classic,
-    "classic2"     : classic2,
+    "classic2"    : classic2,
     "cross_prod"  : cross_prod,
   }
 
   PARSING_LENGHT = {
     "classic"     : 27,
-    "classic2"     : 27,
+    "classic2"    : 27,
     "cross_prod"  : 27 * 27, 
   }
   ######################################################################
   ## CORE FUNCTIONS
 
   def __init__(self, path, traindata=True, mode="classic", nbZeroes=2):
-    self.path = path
-    self.mode = mode
+    self.path           = path
+    self.mode           = mode
     self.parsing_method = self.PARSING_METHODS[mode]
     self.parsing_lenght = self.PARSING_LENGHT[mode]
-    self.traindata = traindata
-    self.header = []
-    self.nbZeroes = nbZeroes
+    self.traindata      = traindata
+    self.header         = []
+    self.nbZeroes       = nbZeroes
 
   def run(self):
     for t, line in enumerate(open(self.path)):

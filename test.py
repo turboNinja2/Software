@@ -5,16 +5,16 @@ from Model                  import *
 from Models                 import *
 from Globals                import *
 
-MULTI = False
+MULTI = True
 
-Learning = OnlineLinearLearning
+Learning    = OnlineLinearLearning
 
-train = dataPath + "small_train_set.csv"
-validation = dataPath + "small_validation_set.csv"
-dump = dataPath + "results/test_results.csv"
+train       = dataPath + "small_train_set.csv"
+validation  = dataPath + "small_validation_set.csv"
+dump        = dataPath + "results/test_results.csv"
 
 
-expected = 0.167259060835432709423848
+expected    = 0.167259060835432709423848
 
 
 model = Learning({"alpha" : 0.1}, 
@@ -39,15 +39,13 @@ if MULTI:
                   [0] * D,
                   trainPath=train,
                   validationPath=validation,
-                  refreshLine=50,
+                  refreshLine=150,
                   dumpingPath=dump))
 
   models = Models(model_list)
   models.train()
   models.validation()
-  for model in models.models:
-    print(model.score)
-  #models.dump()
+  models.dump()
 
 print("Test ended")
 

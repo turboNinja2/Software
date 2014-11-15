@@ -4,6 +4,7 @@ from datetime       import datetime
 from tools.misc     import shrink, copysign,  logloss
 
 import csv
+import json
 
 class Model:
 
@@ -15,6 +16,7 @@ class Model:
                 refreshLine     = None,
                 nbZeroesParser  = 2,
                 dumpingPath     = None,
+                jsonDumpingPath = None,
                 parser_mode     = "classic",
               ):
     self.params           = params
@@ -31,6 +33,7 @@ class Model:
     self.nbZeroes         = nbZeroesParser
     self.score            = None
     self.parser_mode      = parser_mode
+    self.jsonDumpingPath  = jsonDumpingPath
     for key in params.keys():
       setattr(self, key, params[key])
 
@@ -70,6 +73,23 @@ class Model:
     to_dump     = model_desc + ", NbZeroes : %s, Parser Mode : %s, score : %s, logLoss : %s\n" % (self.nbZeroes,self.parser_mode,score,logLoss)
     return to_dump
 
+  def dumping_dict(self):
+    name          = self.name
+    params        = self.params
+    score         = self.get_score()
+    logLoss       = self.getLogLoss()
+    nbZeroes      = self.nbZeroes
+    parser_mode   = self.parser_mode
+    dict_to_dump  = {
+      "name"        : name,
+      "params"      : params,
+      "score"       : score,
+      "logLoss"     : logLoss,
+      "nbZeroes"    : nbZeroes,
+      "parser_mode" : parser_mode,
+    }
+    return dict_to_dump
+
   def dumping_list(self):
     name          = self.name
     params        = self.params
@@ -77,21 +97,23 @@ class Model:
     logLoss       = self.getLogLoss()
     nbZeroes      = self.nbZeroes
     parser_mode   = self.parser_mode
-    list_to_dump  = [name,params,nbZeroes,parser_mode,score,logLoss]
+    list_to_dump  = [name,params,score,logLoss,nbZeroes,parser_mode]
     return list_to_dump
-
 
   def __str__(self):
    return "%s, params : %s" % (self.name, str(self.params))
 
   def dump_score(self):
     dumping_string  = self.dumping_string()
+    dumping_dict    = self.dumping_dict()
     dumping_list    = self.dumping_list()
+    json_dict       = json.dumps(dumping_dict)
     #try:
     f = open(self.dumpingPath,'a')
+    json_f = open(self.jsonDumpingPath, 'a')
     a = csv.writer(f)
     a.writerow(dumping_list)
-    #f.write([dumping_list])
+    json_f.write(json_dict)
     f.close()
     """
     except:

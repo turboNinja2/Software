@@ -12,6 +12,7 @@ Learning    = OnlineLinearLearning
 train       = dataPath + "small_train_set.csv"
 validation  = dataPath + "small_validation_set.csv"
 dump        = dataPath + "results/test_results.csv"
+json_dump   = dataPath + "results/test_json_results.csv" 
 
 
 expected    = 0.167259060835432709423848
@@ -22,7 +23,9 @@ model = Learning({"alpha" : 0.1},
                  trainPath=train, 
                  validationPath=validation, 
                  refreshLine=100,
-                 dumpingPath=dump)
+                 dumpingPath=dump,
+                 jsonDumpingPath=json_dump,
+                 )
 model.train()
 found = model.validate()
 model.dump_score()

@@ -3,6 +3,8 @@ from DataOperations import *
 from datetime       import datetime
 from tools.misc     import shrink, copysign,  logloss
 
+import csv
+
 class Model:
 
   ####################################################################################
@@ -58,7 +60,9 @@ class Model:
     if self.score is None:
       raise "Caca !"
     return self.score
- 
+  ####################################################################################
+  ## PRINTING FUNCTIONS
+
   def dumping_string(self):
     model_desc  = str(self)
     score       = self.get_score()
@@ -66,7 +70,36 @@ class Model:
     to_dump     = model_desc + ", NbZeroes : %s, Parser Mode : %s, score : %s, logLoss : %s\n" % (self.nbZeroes,self.parser_mode,score,logLoss)
     return to_dump
 
+  def dumping_list(self):
+    name          = self.name
+    params        = self.params
+    score         = self.get_score()
+    logLoss       = self.getLogLoss()
+    nbZeroes      = self.nbZeroes
+    parser_mode   = self.parser_mode
+    list_to_dump  = [name,params,nbZeroes,parser_mode,score,logLoss]
+    return list_to_dump
 
+
+  def __str__(self):
+   return "%s, params : %s" % (self.name, str(self.params))
+
+  def dump_score(self):
+    dumping_string  = self.dumping_string()
+    dumping_list    = self.dumping_list()
+    #try:
+    f = open(self.dumpingPath,'a')
+    a = csv.writer(f)
+    a.writerow(dumping_list)
+    #f.write([dumping_list])
+    f.close()
+    """
+    except:
+      f = open(str(self),'a')
+      f.write(dumping_string)
+      f.close()
+    """
+ 
   ####################################################################################
   ## RUNNING FUNCTIONS
 
@@ -99,23 +132,7 @@ class Model:
         print('%s\tencountered: %d\t training loss: %f' % (datetime.now(), tt, self.getLogLoss()))
       else:
         print('%s\tencountered: %d\t validation loss: %f' % (datetime.now(), tt, self.getValidationLogLoss()))
-  ####################################################################################
-  ## PRINTING FUNCTIONS
-
-  def __str__(self):
-   return "%s, params : %s" % (self.name, str(self.params))
-
-  def dump_score(self):
-    dumping_string = self.dumping_string()
-    try:
-      f = open(self.dumpingPath,'a')
-      f.write(dumping_string)
-      f.close()
-    except:
-      f = open(str(self),'a')
-      f.write(dumping_string)
-      f.close()
-    
+   
   ####################################################################################
   ## CORE FUNCTIONS
 

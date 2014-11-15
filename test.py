@@ -5,7 +5,7 @@ from Model                  import *
 from Models                 import *
 from Globals                import *
 
-MULTI = True
+MULTI = False
 
 Learning    = OnlineLinearLearning
 

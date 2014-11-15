@@ -21,19 +21,20 @@ if __name__ == '__main__':
 
   model_list = []
 
-  for i in range(1,num_cores):
-    model_list.append(OnlineLinearLearning({"alpha" : 10 ** (-i)},
+  for i in range(0,3*num_cores):
+    model_list.append(OnlineLinearLearning({"alpha" : pow(10,-1) + i*(pow(10,-3)-pow(10,-1))/(3*num_cores)},
                   [0] * D, 
                   trainPath       = train_set,
                   validationPath  = validation_set,
                   refreshLine     = refreshLine,
-                  dumpinPath      = path,
+                  dumpingPath      = dump,
     ))
 
   if validation :
     models = Models(model_list)
     models.train()
     models.validation()
+    models.dump()
   if submit :
     model = Learning(params,w,train_global)
     model.train()

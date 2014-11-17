@@ -7,7 +7,8 @@ class Model:
 
   ####################################################################################
   ## INIT FUNCTIONS
-  def __init__(self, params, wInit, trainPath=None,validationPath=None, refreshLine = None,
+  def __init__(self, params, wInit, trainPath=None,validationPath=None, 
+               refreshLine = None,
                nbZeroesParser = 2,
                dumpingPath = None):
     self.params           = params
@@ -23,6 +24,7 @@ class Model:
     self.refreshLine      = refreshLine
     self.nbZeroes         = nbZeroesParser
     self.score            = None
+    self.features = "classic"
     for key in params.keys():
       setattr(self, key, params[key])
 
@@ -74,7 +76,7 @@ class Model:
 
   def run_data(self, path,update=False):
     tt = 1
-    data = DataParser(path)
+    data = DataParser(path,mode = self.features)
     validation_loss = 0
     for ID, x, y in data.run():
       if update:
@@ -140,10 +142,9 @@ class Model:
 ######################################################################################
 ## CUSTOM MODELS
 
-
 class OnlineLinearLearning(Model):
   def __init__(self,params,wInit,**kwargs):
-    Model.__init__(self,params, wInit,**kwargs)
+    Model.__init__(self,params, wInit, **kwargs)
     self.n = [0] * len(wInit)
     self.name = "Online method"
 

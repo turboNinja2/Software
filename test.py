@@ -45,9 +45,7 @@ if MULTI:
   models = Models(model_list)
   models.train()
   models.validation()
-  for model in models.models:
-    print(model.score)
-  #models.dump()
+  models.dump()
 
 print("Test ended")
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from settings import *
+from settings       import *
 from DataOperations import *
 
 initial_data = "train_rev2.csv"

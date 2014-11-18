@@ -2,10 +2,7 @@
 
 from settings               import *
 from Model                  import *
-from Models                 import *
 from Globals                import *
-
-MULTI = True
 
 class Test:
 
@@ -23,15 +20,18 @@ class Test:
       "validationPath"  : validation,
       "dumpingPath"     : dump,
       "jsonDumpingPath" : json_dump,
-      "refreshLine"     : 100,
+      "refreshLine"     : 150,
     }
+    
+    self.params = {"alpha":0.1}
+    self.w = [0.] * D
 
 
     self.expected    = 0.167259060835432709423848
 
   def run(self):
-    model = self.Learning({"alpha" : 0.1}, 
-                     [0.] * D, 
+    model = self.Learning(self.params, 
+                     self.w, 
                      **self.kwargs
                      )
     model.train()
@@ -44,10 +44,11 @@ class Test:
       print("Houston, we got a problem. Found : %s, Expected : %s" % (found, self.expected))
 
   def run_multi(self):
+    from Models import Models 
     model_list = []
     for i in range(num_cores):
       model_list.append(self.Learning({"alpha" : 10 ** (-i)}, 
-                    [0] * D,
+                    self.w,
                     **self.kwargs
                     ))
 
@@ -57,8 +58,3 @@ class Test:
     models.dump()
 
     print("Test ended")
-
-t = Test()
-t.run()
-if MULTI:
-  t.run_multi()

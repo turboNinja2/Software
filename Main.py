@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 if __name__ == '__main__':
-  import test
+  #import test
   MULTI = False
 
   # folders #################################################################
@@ -19,8 +19,8 @@ if __name__ == '__main__':
   
   dt = datetime.now().__str__()
   dummyString = ''.join(e for e in dt if e.isalnum())
-  dump            = dataPath + "results/results" + dummyString+ " .csv"
-  jsonDump            = dataPath + "results/results_json" + dummyString+ " .csv"
+  dump            = dataPath + "results/results" + dummyString+ ".csv"
+  jsonDump            = dataPath + "results/results_json" + dummyString+ ".csv"
 
 
   # training and testing
@@ -28,6 +28,7 @@ if __name__ == '__main__':
 
   model_list = []
 
+  """
   for i in range(1,6):
     model_list.append(OnlineLinearLearning({"alpha" : 0.1 * 10 ** (-i)}, 
       [0] * D,
@@ -36,8 +37,19 @@ if __name__ == '__main__':
       refreshLine=refreshLine,
       dumpingPath=dump,
       jsonDumpingPath = jsonDump))
+  """
 
   if validation :
+    model = OnlineLinearLearning({"alpha":0.01},[0.]*D,
+      trainPath=train_set,
+      validationPath=validation_set,
+      refreshLine=refreshLine,
+      dumpingPath=dump,
+      jsonDumpingPath = jsonDump)
+    model.train()
+    print model.validate()
+    model.dump_score()
+
     models = Models(model_list)
     models.train()
     models.validation()

@@ -5,7 +5,8 @@ from Model                  import *
 from Models                 import *
 from Globals                import *
 
-MULTI = False
+MULTI = True
+
 
 Learning    = OnlineLinearLearning
 
@@ -14,17 +15,21 @@ validation  = dataPath + "small_validation_set.csv"
 dump        = dataPath + "results/test_results.csv"
 json_dump   = dataPath + "results/test_json_results.csv" 
 
+kwargs = {
+  "trainPath"       : train,
+  "validationPath"  : validation,
+  "dumpingPath"     : dump,
+  "jsonDumpingPath" : json_dump,
+  "refreshLine"     : 100,
+}
+
 
 expected    = 0.167259060835432709423848
 
 
 model = Learning({"alpha" : 0.1}, 
                  [0.] * D, 
-                 trainPath=train, 
-                 validationPath=validation, 
-                 refreshLine=100,
-                 dumpingPath=dump,
-                 jsonDumpingPath=json_dump,
+                 **kwargs
                  )
 model.train()
 found = model.validate()
@@ -40,10 +45,8 @@ if MULTI:
   for i in range(num_cores):
     model_list.append(OnlineLinearLearning({"alpha" : 10 ** (-i)}, 
                   [0] * D,
-                  trainPath=train,
-                  validationPath=validation,
-                  refreshLine=150,
-                  dumpingPath=dump))
+                  **kwargs
+                  ))
 
   models = Models(model_list)
   models.train()

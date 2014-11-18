@@ -58,3 +58,7 @@ class Test:
     models.dump()
 
     print("Test ended")
+
+t = Test()
+t.run()
+t.run_multi()

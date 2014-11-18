@@ -7,6 +7,7 @@ from Models           import *
 
 if __name__ == '__main__':
   import test
+  MULTI = False
 
   # folders #################################################################
   train_global    = dataPath + 'train_rev2.csv'  # path to training file

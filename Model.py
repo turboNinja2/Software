@@ -3,16 +3,21 @@ from DataOperations import *
 from datetime       import datetime
 from tools.misc     import shrink, copysign,  logloss
 
+import csv
+import json
+
 class Model:
 
   ####################################################################################
   ## INIT FUNCTIONS
+
   def __init__(self, params, wInit, 
                 trainPath       = None,
                 validationPath  = None, 
                 refreshLine     = None,
                 nbZeroesParser  = 2,
                 dumpingPath     = None,
+                jsonDumpingPath = None,
                 parser_mode     = "classic",
               ):
     self.params           = params
@@ -29,6 +34,7 @@ class Model:
     self.nbZeroes         = nbZeroesParser
     self.score            = None
     self.parser_mode      = parser_mode
+    self.jsonDumpingPath  = jsonDumpingPath
     for key in params.keys():
       setattr(self, key, params[key])
 
@@ -58,7 +64,9 @@ class Model:
     if self.score is None:
       raise "Caca !"
     return self.score
- 
+  ####################################################################################
+  ## PRINTING FUNCTIONS
+
   def dumping_string(self):
     model_desc  = str(self)
     score       = self.get_score()
@@ -66,7 +74,55 @@ class Model:
     to_dump     = model_desc + ", NbZeroes : %s, Parser Mode : %s, score : %s, logLoss : %s\n" % (self.nbZeroes,self.parser_mode,score,logLoss)
     return to_dump
 
+  def dumping_dict(self):
+    name          = self.name
+    params        = self.params
+    score         = self.get_score()
+    logLoss       = self.getLogLoss()
+    nbZeroes      = self.nbZeroes
+    parser_mode   = self.parser_mode
+    dict_to_dump  = {
+      "name"        : name,
+      "params"      : params,
+      "score"       : score,
+      "logLoss"     : logLoss,
+      "nbZeroes"    : nbZeroes,
+      "parser_mode" : parser_mode,
+    }
+    return dict_to_dump
 
+  def dumping_list(self):
+    name          = self.name
+    params        = self.params
+    score         = self.get_score()
+    logLoss       = self.getLogLoss()
+    nbZeroes      = self.nbZeroes
+    parser_mode   = self.parser_mode
+    list_to_dump  = [name,params,score,logLoss,nbZeroes,parser_mode]
+    return list_to_dump
+
+  def __str__(self):
+   return "%s, params : %s" % (self.name, str(self.params))
+
+  def dump_score(self):
+    dumping_string  = self.dumping_string()
+    dumping_dict    = self.dumping_dict()
+    dumping_list    = self.dumping_list()
+    json_dict       = json.dumps(dumping_dict)
+    #try:
+    f = open(self.dumpingPath,'a')
+    json_f = open(self.jsonDumpingPath, 'a')
+    a = csv.writer(f)
+    a.writerow(dumping_list)
+    json_f.write(json_dict)
+    f.close()
+    """
+    except:
+      f = open(str(self),'a')
+      f.write(dumping_string)
+      f.close()
+    """
+ 
   ####################################################################################
   ## RUNNING FUNCTIONS
 
@@ -81,7 +137,7 @@ class Model:
 
   def run_data(self, path,update=False):
     tt = 1
-    data = DataParser(path)
+    data = DataParser(path,mode = self.parser_mode)
     validation_loss = 0
     for ID, x, y in data.run():
       if update:
@@ -99,23 +155,7 @@ class Model:
         print('%s\tencountered: %d\t training loss: %f' % (datetime.now(), tt, self.getLogLoss()))
       else:
         print('%s\tencountered: %d\t validation loss: %f' % (datetime.now(), tt, self.getValidationLogLoss()))
-  ####################################################################################
-  ## PRINTING FUNCTIONS
-
-  def __str__(self):
-   return "%s, params : %s" % (self.name, str(self.params))
-
-  def dump_score(self):
-    dumping_string = self.dumping_string()
-    try:
-      f = open(self.dumpingPath,'a')
-      f.write(dumping_string)
-      f.close()
-    except:
-      f = open(str(self),'a')
-      f.write(dumping_string)
-      f.close()
-    
+   
   ####################################################################################
   ## CORE FUNCTIONS
 
@@ -147,10 +187,9 @@ class Model:
 ######################################################################################
 ## CUSTOM MODELS
 
-
 class OnlineLinearLearning(Model):
   def __init__(self,params,wInit,**kwargs):
-    Model.__init__(self,params, wInit,**kwargs)
+    Model.__init__(self,params, wInit, **kwargs)
     self.n = [0] * len(wInit)
     self.name = "Online method"
 

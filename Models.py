@@ -59,47 +59,54 @@ class Models:
 
 
 
-def SoftwareTM():
+class SoftwareTM():
   
-  #PARAMS
-  from test import Test
-  test = Test()
-  params  = test.params
-  model   = test.Learning
-  kwargs  = test.kwargs
-  w       = test.w
+  def __init__(self):
+    from test import Test
+    test = Test()
+    self.params  = test.params
+    self.model   = test.Learning
+    self.kwargs  = test.kwargs
+    self.w       = test.w
 
 
-  step = 5 
-  step_range = 8
+    self.step       = 5 
+    self.step_range = 8
 
-  #FIRST SCALE
-  init_scale = lambda x : pow(10,-x)
-  model_list = []
-  for i in xrange(step_range):
-    model_list.append(model({"alpha":init_scale(i)},w,**kwargs))
 
-  models = Models(model_list)
-  models.train()
-  models.validation()
+  def compute_x12(self):
+    self.models.train()
+    self.models.validation()
+    x1,x2 = truc(self.models)
+    return x1, x2
 
-  
-  x1,x2 = truc(models)
-
-  #ITERATIONS
-  for i in xrange(step):
-    print i
-    scale = lambda x : x2 + float(x)*(x1-x2)/(step_range-1)
+  def build_model_list(self, scale_function):
     model_list = []
-    for j in xrange(step_range):
-      model_list.append(model({"alpha":scale(j)},w,**kwargs))
-    models = Models(model_list)
-    models.train()
-    models.validation()
-    x1,x2 = truc(models)
+    for i in xrange(self.step_range):
+      model_list.append(self.model({"alpha":scale_function(i)},self.w,**self.kwargs))
+    return model_list
+
+
+  def first_scale(self):
+    init_scale = lambda x : pow(10,-x)
+    model_list = self.build_model_list(init_scale)
+    self.models = Models(model_list)
+    self.x1, self.x2 = self.compute_x12()
+
+  def next_scale(self):
+    for i in xrange(self.step):
+      scale = lambda x : self.x2 + float(x)*(self.x1-self.x2)/(self.step_range-1)
+      model_list = self.build_model_list(scale)
+      self.models = Models(model_list)
+      self.x1, self.x2 = self.compute_x12()
+
+  def run(self):
+    self.first_scale()
+    self.next_scale()
 
 def truc(models):
   r = map(lambda x : (x.score,x.params["alpha"]),models.models)
+  r.sort(key=lambda x : x[1])
   print r
   r_min = 10
   i_min = -1

@@ -5,6 +5,7 @@ from joblib           import Parallel, delayed
 from multiprocessing  import Pool
 from settings         import *
 from multiprocessing  import Process, Queue
+from ModelExemple     import *
 
 def tem_update(model):
   model.train()
@@ -62,17 +63,8 @@ class Models:
 class SoftwareTM():
   
   def __init__(self):
-    from test import Test
-    test = Test()
-    self.params  = test.params
-    self.model   = test.Learning
-    self.kwargs  = test.kwargs
-    self.w       = test.w
-
-
-    self.step       = 5 
-    self.step_range = 8
-
+    self.step       = 3 
+    self.step_range = 5
 
   def compute_x12(self):
     self.models.train()
@@ -83,7 +75,7 @@ class SoftwareTM():
   def build_model_list(self, scale_function):
     model_list = []
     for i in xrange(self.step_range):
-      model_list.append(self.model({"alpha":scale_function(i)},self.w,**self.kwargs))
+      model_list.append(mediumModel(scale_function(i)))
     return model_list
 
 

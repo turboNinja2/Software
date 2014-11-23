@@ -29,7 +29,7 @@ def smallModel(alpha=0.1):
   return model
 
 def mediumModel(alpha=0.1):
-  Learning    = OnlineLinearLearning
+  Learning    = LogOnlineLinearLearning
 
   train       = dataPath + 'medium_train_set.csv'
   validation  = dataPath + 'medium_validation_set.csv'

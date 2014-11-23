@@ -24,9 +24,12 @@ class Models:
     self.models = models
     self.para = True
     self.q = Queue()
+    self.pool = Pool(processes=num_cores)
 
   def train(self):
     if self.para:
+      self.models = self.pool.map(tem_update,self.models)
+      """
       ps = map(lambda x : Process(target=update_model, args=(self.q,x)), self.models)
       for p in ps:
         p.start()
@@ -34,12 +37,15 @@ class Models:
       for i in xrange(len(ps)):
         models.append(self.q.get())
       self.models = models
+      """
     else:
       for model in self.models :
         model.train()
 
   def validation(self):
     if self.para:
+      self.models = self.pool.map(tem_run,self.models)
+      """
       ps = map(lambda x : Process(target=run_model, args=(self.q,x)), self.models)
       for p in ps:
         p.start()
@@ -47,6 +53,7 @@ class Models:
       for i in xrange(len(ps)):
         models.append(self.q.get())
       self.models = models
+      """
     else:
       for model in self.models :
         model.validate()
@@ -59,7 +66,7 @@ class SoftwareTM():
   
   def __init__(self):
     self.step       = 5 
-    self.step_range = 8
+    self.step_range = 5 
 
   def compute_x12(self):
     self.models.train()
@@ -86,6 +93,7 @@ class SoftwareTM():
       model_list = self.build_model_list(scale)
       self.models = Models(model_list)
       self.x1, self.x2 = self.compute_x12()
+      print "step %s done" % (i,)
 
   def run(self):
     self.first_scale()

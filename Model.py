@@ -12,22 +12,21 @@ class Model:
   ## INIT FUNCTIONS
 
   def __init__(self, params, wInit, 
-                parser_mode     = "classic",
-                **kwargs
-              ):
-    self.params           = params
-    self.w                = wInit
+                parser_mode="classic",
+                **kwargs):
+    self.params = params
+    self.w = wInit
 
-    self.nbIterationsTraining   = 0 
+    self.nbIterationsTraining = 0 
     self.nbIterationsValidation = 0
 
-    self.loss             = 0
-    self.validation_loss  = 0
+    self.loss = 0
+    self.validation_loss = 0
 
-    self.name             = "Unamed"
+    self.name = "Unamed"
 
 
-    self.parser_mode      = parser_mode
+    self.parser_mode = parser_mode
 
     for key in params.keys():
       setattr(self, key, params[key])
@@ -52,19 +51,19 @@ class Model:
   ## PRINTING FUNCTIONS
 
   def dumping_string(self):
-    model_desc  = str(self)
-    validationLogLoss       = self.getValidationLogLoss()
-    trainingLogLoss     = self.getTrainingLogLoss()
-    to_dump     = model_desc + ", Parser Mode : %s, score : %s, logLoss : %s\n" % (self.parser_mode,validationLogLoss,trainingLogLoss)
+    model_desc = str(self)
+    validationLogLoss = self.getValidationLogLoss()
+    trainingLogLoss = self.getTrainingLogLoss()
+    to_dump = model_desc + ", Parser Mode : %s, score : %s, logLoss : %s\n" % (self.parser_mode,validationLogLoss,trainingLogLoss)
     return to_dump
 
   def dumping_dict(self):
-    name          = self.name
-    params        = self.params
-    validationLogLoss         = self.getValidationLogLoss()
-    trainingLogLoss       = self.getTrainingLogLoss()
-    parser_mode   = self.parser_mode
-    dict_to_dump  = {
+    name = self.name
+    params = self.params
+    validationLogLoss = self.getValidationLogLoss()
+    trainingLogLoss = self.getTrainingLogLoss()
+    parser_mode = self.parser_mode
+    dict_to_dump = {
       "name"        : name,
       "params"      : params,
       "validationLogLoss"       : validationLogLoss,
@@ -74,22 +73,22 @@ class Model:
     return dict_to_dump
 
   def dumping_list(self):
-    name          = self.name
-    params        = self.params
-    validationLogLoss         = self.getValidationLogLoss()
-    trainingLogLoss       = self.getTrainingLogLoss()
-    parser_mode   = self.parser_mode
-    list_to_dump  = [name,params,validationLogLoss,trainingLogLoss,parser_mode]
+    name = self.name
+    params = self.params
+    validationLogLoss = self.getValidationLogLoss()
+    trainingLogLoss = self.getTrainingLogLoss()
+    parser_mode = self.parser_mode
+    list_to_dump = [name,params,validationLogLoss,trainingLogLoss,parser_mode]
     return list_to_dump
 
   def __str__(self):
    return "%s, params : %s" % (self.name, str(self.params))
 
   def dump_score(self):
-    dumping_string  = self.dumping_string()
-    dumping_dict    = self.dumping_dict()
-    dumping_list    = self.dumping_list()
-    json_dict       = json.dumps(dumping_dict)
+    dumping_string = self.dumping_string()
+    dumping_dict = self.dumping_dict()
+    dumping_list = self.dumping_list()
+    json_dict = json.dumps(dumping_dict)
     #try:
     f = open(self.dumpingPath,'a')
     json_f = open(self.jsonDumpingPath, 'a')
@@ -172,7 +171,6 @@ class Model:
 
 ######################################################################################
 ## CUSTOM MODELS
-
 class OnlineLinearLearning(Model):
   def __init__(self,params,wInit,**kwargs):
     Model.__init__(self,params, wInit, **kwargs)
@@ -183,6 +181,17 @@ class OnlineLinearLearning(Model):
     for i in x:
       self.n[i] += abs(p - y)
       self.w[i] -= (p - y) * 1. * self.alpha / sqrt(self.n[i])
+
+class LogOnlineLinearLearning(Model):
+  def __init__(self,params,wInit,**kwargs):
+    Model.__init__(self,params, wInit, **kwargs)
+    self.n = [0] * len(wInit)
+    self.name = "Log Online method"
+
+  def loop(self,p,x,y):
+    for i in x:
+      self.n[i] += abs(p - y)
+      self.w[i] -= ((1 - y) / (1 - p) - y / p) * 1. * self.alpha / sqrt(self.n[i])
 
 class ZALMS(Model):
   def __init__(self,params,wInit,**kwargs):

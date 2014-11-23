@@ -37,7 +37,8 @@ def mediumModel(alpha=0.1):
     "validationPath"  : validation,
     "dumpingPath"     : dump,
     "jsonDumpingPath" : json_dump,
-    "refreshLine"     : 100000,
+    "refreshLine"     : 1000000,
+    "parser_mode"     : "classic2",
   }
 
   params = {"alpha" : alpha}

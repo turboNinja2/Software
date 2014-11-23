@@ -3,7 +3,7 @@
 from settings               import *
 from Model                  import *
 from Globals                import *
-from ModelExemple           import smallModel
+from ModelExemple           import *
 
 class Test:
   def __init__(self):

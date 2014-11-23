@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 
-from joblib           import Parallel, delayed
 from multiprocessing  import Pool
 from settings         import *
 from multiprocessing  import Process, Queue
@@ -63,8 +62,8 @@ class Models:
 class SoftwareTM():
   
   def __init__(self):
-    self.step       = 3 
-    self.step_range = 5
+    self.step       = 5 
+    self.step_range = 8
 
   def compute_x12(self):
     self.models.train()

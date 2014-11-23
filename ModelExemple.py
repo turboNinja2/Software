@@ -15,7 +15,7 @@ def smallModel(alpha=0.1):
     "validationPath"  : validation,
     "dumpingPath"     : dump,
     "jsonDumpingPath" : json_dump,
-    "refreshLine"     : 150,
+    "refreshLine"     : 75,
   }
 
   params = {"alpha":alpha}

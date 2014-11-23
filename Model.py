@@ -35,15 +35,6 @@ class Model:
     for key in kwargs.keys():
       setattr(self, key, kwargs[key])
 
-  def predict(self, x):
-    wTx,_ = self.innerProduct(x)
-    return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
-  
-  def innerValidation(self,x,y):        
-    p = self.predict(x)
-    self.validation_loss += logloss(p,y)
-    self.nbIterationsValidation += 1
-
   ####################################################################################
   ## GETTING FUCNTIONS
 
@@ -147,6 +138,12 @@ class Model:
    
   ####################################################################################
   ## CORE FUNCTIONS
+ 
+  def innerValidation(self,x,y):        
+    self.pretreatment(x)
+    p = self.predict(x)
+    self.validation_loss += logloss(p,y)
+    self.nbIterationsValidation += 1
 
   def innerProduct(self,x):
     wTx = 0.
@@ -161,13 +158,13 @@ class Model:
     return 1. / (1. + exp(-max(min(wTx, 20.), -20.)))  # bounded sigmoid
 
   def update(self,x,y):
-    self.pretrement(x)
+    self.pretreatment(x)
     p = self.predict(x)
     self.nbIterationsTraining += 1
     self.loss += logloss(p,y)
     self.loop(p,x,y)
 
-  def pretrement(self,x):
+  def pretreatment(self,x):
     pass   
 
   def loop(self,p,y,x):

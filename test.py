@@ -9,7 +9,7 @@ class Test:
   def __init__(self):
     self.model = smallModel() 
 
-    self.expected    = 0.169596635702270145017467
+    self.expected    = 0.4496386388256323751733134486130438745021820068359375
 
   def run(self):
     self.model.train()

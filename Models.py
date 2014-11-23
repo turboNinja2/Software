@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 from multiprocessing  import Pool
 from settings         import *
 from multiprocessing  import Process, Queue
@@ -19,7 +18,6 @@ def tem_run(model):
 
 def run_model(q,model):
   q.put(tem_run(model))
-
 
 class Models:
   def __init__(self, models):
@@ -56,8 +54,6 @@ class Models:
   def dump(self):
     for model in self.models :
       model.dump_score()
-
-
 
 class SoftwareTM():
   

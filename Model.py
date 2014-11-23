@@ -12,7 +12,6 @@ class Model:
   ## INIT FUNCTIONS
 
   def __init__(self, params, wInit, 
-                nbZeroesParser  = 2,
                 parser_mode     = "classic",
                 **kwargs
               ):
@@ -27,7 +26,6 @@ class Model:
 
     self.name             = "Unamed"
 
-    self.nbZeroes         = nbZeroesParser
 
     self.parser_mode      = parser_mode
 
@@ -66,7 +64,7 @@ class Model:
     model_desc  = str(self)
     validationLogLoss       = self.getValidationLogLoss()
     trainingLogLoss     = self.getTrainingLogLoss()
-    to_dump     = model_desc + ", NbZeroes : %s, Parser Mode : %s, score : %s, logLoss : %s\n" % (self.nbZeroes,self.parser_mode,validationLogLoss,trainingLogLoss)
+    to_dump     = model_desc + ", Parser Mode : %s, score : %s, logLoss : %s\n" % (self.parser_mode,validationLogLoss,trainingLogLoss)
     return to_dump
 
   def dumping_dict(self):
@@ -74,14 +72,12 @@ class Model:
     params        = self.params
     validationLogLoss         = self.getValidationLogLoss()
     trainingLogLoss       = self.getTrainingLogLoss()
-    nbZeroes      = self.nbZeroes
     parser_mode   = self.parser_mode
     dict_to_dump  = {
       "name"        : name,
       "params"      : params,
       "validationLogLoss"       : validationLogLoss,
       "trainingLogLoss"     : trainingLogLoss,
-      "nbZeroes"    : nbZeroes,
       "parser_mode" : parser_mode,
     }
     return dict_to_dump
@@ -91,9 +87,8 @@ class Model:
     params        = self.params
     validationLogLoss         = self.getValidationLogLoss()
     trainingLogLoss       = self.getTrainingLogLoss()
-    nbZeroes      = self.nbZeroes
     parser_mode   = self.parser_mode
-    list_to_dump  = [name,params,validationLogLoss,trainingLogLoss,nbZeroes,parser_mode]
+    list_to_dump  = [name,params,validationLogLoss,trainingLogLoss,parser_mode]
     return list_to_dump
 
   def __str__(self):

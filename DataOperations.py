@@ -21,8 +21,8 @@ class DataParser:
  
   ######################################################################
   ## PARSING METHOD
-  def classic(self, line, nbZeroes=2):
-    x = [0] * nbZeroes
+  def classic(self, line):
+    x = [0]
     for m, feat in enumerate(strip_line(line)):
       if m == 0:
         ID = int(feat)
@@ -32,8 +32,8 @@ class DataParser:
         x.append(abs(hash(str(m) + '_' + feat)) % D)
     return (ID, x, y)
 
-  def classic2(self, line, nbZeroes=1):
-    x = [0] * nbZeroes
+  def classic2(self, line):
+    x = [0]
     for m, feat in enumerate(strip_line(line)):
       if self.header[m] == "id":
         ID = int(feat)
@@ -74,21 +74,20 @@ class DataParser:
   ######################################################################
   ## CORE FUNCTIONS
 
-  def __init__(self, path, traindata=True, mode="classic", nbZeroes=2):
+  def __init__(self, path, traindata=True, mode="classic"):
     self.path           = path
     self.mode           = mode
     self.parsing_method = self.PARSING_METHODS[mode]
     self.parsing_lenght = self.PARSING_LENGHT[mode]
     self.traindata      = traindata
     self.header         = []
-    self.nbZeroes       = nbZeroes
 
   def run(self):
     for t, line in enumerate(open(self.path)):
       if t == 0:
         self.header = strip_line(line)
         continue
-      ID, x, y = self.parsing_method(self, line, nbZeroes = self.nbZeroes)
+      ID, x, y = self.parsing_method(self, line)
       yield (ID, x, y) if self.traindata else (ID, x)
 
 # The files contains 47 686 525 lines

@@ -9,7 +9,7 @@ class Test:
   def __init__(self):
     self.model = smallModel() 
 
-    self.expected    = 0.1689150911412599931349376447542454116046428680419921875
+    self.expected    = 0.169596635702270145017467
 
   def run(self):
     self.model.train()
@@ -17,7 +17,7 @@ class Test:
     found = self.model.getValidationLogLoss()
     self.model.dump_score()
 
-    if str(found) == str(self.expected):
+    if found == self.expected:
       print("We're Good !")
     else:
       print("Houston, we got a problem. Found : %s, Expected : %s" % (found, self.expected))

@@ -3,7 +3,7 @@
 from test import Test
 
 if __name__ == "__main__":
-  MULTI = True
+  MULTI = False
   t     = Test()
   t.run()
   if MULTI:

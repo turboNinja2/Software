@@ -4,18 +4,19 @@ from FeatureFunctions import *
 
 ########################################################################
 ## TOOLS
-
 def strip_line(line):
   return line.rstrip().split(',')
 
-def hash_feature(m,feat):
-  return abs(hash(str(m) + '_' + feat)) % D
+def hash_feature(nameFeat,feat):
+  return abs(hash(nameFeat + '_' + feat)) % D
 
-def hash_features(m,feats):
-  result = []
-  for i, feat in enumerate(feats):
-    result.append(abs(hash(str(m) + '_' + str(i) + '_' + feat)) % D)
-  return result
+def hashVect(vect):
+  n = len(vect)
+  res = [0] * n
+  for i in range(n):
+    res[i] = abs(hash(vect[i])) % D
+  return res
+
 
 class DataParser:
  
@@ -33,54 +34,43 @@ class DataParser:
     return (ID, x, y)
 
   def classic2(self, line):
-    x = [0]
+    xString = ['0']
+    y = 0
+    header = self.header
     for m, feat in enumerate(strip_line(line)):
-      if self.header[m] == "id":
+      if header[m] == "id":
         ID = int(feat)
-      elif self.header[m] == "hour":
-        x.extend(hash_features(m,cutHourAndDay(feat)))
-      elif self.traindata and self.header[m] == "click":
+      elif header[m] == "hour":
+        xString.extend(cutHourAndDay(feat))
+      elif header[m] == "click":
         y = float(feat)
       else:
-        x.append(hash_feature(m,feat))
+        xString.append(header[m] + '_' + feat)
+
+    x = hashVect(xString)
     return (ID, x, y)
 
-  def cross_prod(self, line, x):
-    i = 0 
-    for m1, feat1 in enumerate(stip_line(line)):
-      if m1 == 0:
-        ID = int(feat1)
-      elif self.traindata and m1 == 1:
-        y = float(feat1)
-      else:
-        for m2, feat2 in enumerate(strip_line(line)):
-          if m2 != 0 and not (self.traindata and m2 == 1):
-            x[i] = abs(hash(str(m1) + '_' + feat1 + '_' + str(m2) + '_' + feat2)) % D
-            i += 1
-    return (ID, x, y)
-            
+
 
   PARSING_METHODS = {
     "classic"     : classic,
     "classic2"    : classic2,
-    "cross_prod"  : cross_prod,
   }
 
   PARSING_LENGHT = {
     "classic"     : 27,
     "classic2"    : 27,
-    "cross_prod"  : 27 * 27, 
   }
   ######################################################################
   ## CORE FUNCTIONS
 
   def __init__(self, path, traindata=True, mode="classic"):
-    self.path           = path
-    self.mode           = mode
+    self.path = path
+    self.mode = mode
     self.parsing_method = self.PARSING_METHODS[mode]
     self.parsing_lenght = self.PARSING_LENGHT[mode]
-    self.traindata      = traindata
-    self.header         = []
+    self.traindata = traindata
+    self.header = []
 
   def run(self):
     for t, line in enumerate(open(self.path)):

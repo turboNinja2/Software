@@ -203,3 +203,17 @@ class OLBI(Model):
       self.w[i] -= self.delta * (p - y) * 1. 
       self.w[i] = shrink(self.w[i], self.gamma) 
 
+class Perceptron(Model):
+  def __init__(self,params,wInit,**kwargs):
+    Model.__init__(self,params, wInit,**kwargs)
+    self.name = "Perceptron"
+
+  def predict(self,x):
+    wTx,_ = self.innerProduct(x)
+    p = sigmoid(self.approx * wTx)
+    return p
+
+  def loop(self,p,x,y):
+    if (y - 0.5) * (p - 0.5) <= 0: # if the predictions disagree
+      for i in x: # contribution of each feature is corrected
+        self.w[i] += (y - 0.5) * 2.

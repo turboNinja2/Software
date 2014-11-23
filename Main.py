@@ -8,9 +8,8 @@ from datetime import datetime
 
 
 if __name__ == '__main__':
-  #import test
-  MULTI = False
-
+  import l_test
+  
   # folders #################################################################
   train_global    = dataPath + 'train_rev2.csv'  # path to training file
   test_global     = dataPath + 'test_rev2.csv'  # path to testing file
@@ -28,7 +27,7 @@ if __name__ == '__main__':
 
   model_list = []
 
-  """
+
   for i in range(1,6):
     model_list.append(OnlineLinearLearning({"alpha" : 0.1 * 10 ** (-i)}, 
       [0] * D,
@@ -37,9 +36,10 @@ if __name__ == '__main__':
       refreshLine=refreshLine,
       dumpingPath=dump,
       jsonDumpingPath = jsonDump))
-  """
+
 
   if validation :
+    """
     model = OnlineLinearLearning({"alpha":0.01},[0.]*D,
       trainPath=train_set,
       validationPath=validation_set,
@@ -47,9 +47,9 @@ if __name__ == '__main__':
       dumpingPath=dump,
       jsonDumpingPath = jsonDump)
     model.train()
-    print model.validate()
+    print(model.validate())
     model.dump_score()
-
+    """
     models = Models(model_list)
     models.train()
     models.validation()

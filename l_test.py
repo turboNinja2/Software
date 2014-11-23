@@ -2,10 +2,7 @@
 
 from test import Test
 
-
-MULTI = False
-
-
+MULTI = True
 t = Test()
 t.run()
 if MULTI:

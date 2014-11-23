@@ -97,9 +97,9 @@ class SoftwareTM():
     self.next_scale()
 
 def truc(models):
-  r = map(lambda x : (x.score,x.params["alpha"]),models.models)
+  r = map(lambda x : (x.getValidationLogLoss(),x.params["alpha"]),models.models)
   r.sort(key=lambda x : x[1])
-  print r
+  print(r)
   r_min = 10
   i_min = -1
   for i,value in enumerate(r):
@@ -116,8 +116,8 @@ def truc(models):
     x1 = r[i_min-1][1]
     x2 = r[i_min+1][1]
     
-  print x1
-  print x2
+  print(x1)
+  print(x2)
   return x1,x2
 
 

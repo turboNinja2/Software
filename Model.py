@@ -22,19 +22,26 @@ class Model:
               ):
     self.params           = params
     self.w                = wInit
-    self.nbIterations     = 0
+
+    self.nbIterationsTraining     = 0
     self.nbIterationsValidation     = 0
+
     self.loss             = 0
     self.validation_loss  = 0
+
     self.name             = "Unamed"
+
     self.trainPath        = trainPath
     self.validationPath   = validationPath
     self.dumpingPath      = dumpingPath
+
     self.refreshLine      = refreshLine
+
     self.nbZeroes         = nbZeroesParser
-    self.score            = None
+
     self.parser_mode      = parser_mode
     self.jsonDumpingPath  = jsonDumpingPath
+
     for key in params.keys():
       setattr(self, key, params[key])
 
@@ -50,42 +57,38 @@ class Model:
   ####################################################################################
   ## GETTING FUCNTIONS
 
-  def getLogLoss(self):
+  def getTrainingLogLoss(self):
     if self.loss == 0:
       return 0
-    return self.loss * 1. / self.nbIterations
+    return self.loss * 1. / self.nbIterationsTraining
 
   def getValidationLogLoss(self):
     if self.validation_loss == 0:
       return 0
     return self.validation_loss * 1. / self.nbIterationsValidation
 
-  def get_score(self):
-    if self.score is None:
-      raise "Caca !"
-    return self.score
   ####################################################################################
   ## PRINTING FUNCTIONS
 
   def dumping_string(self):
     model_desc  = str(self)
-    score       = self.get_score()
-    logLoss     = self.getLogLoss()
-    to_dump     = model_desc + ", NbZeroes : %s, Parser Mode : %s, score : %s, logLoss : %s\n" % (self.nbZeroes,self.parser_mode,score,logLoss)
+    validationLogLoss       = self.getValidationLogLoss()
+    trainingLogLoss     = self.getTrainingLogLoss()
+    to_dump     = model_desc + ", NbZeroes : %s, Parser Mode : %s, score : %s, logLoss : %s\n" % (self.nbZeroes,self.parser_mode,validationLogLoss,trainingLogLoss)
     return to_dump
 
   def dumping_dict(self):
     name          = self.name
     params        = self.params
-    score         = self.get_score()
-    logLoss       = self.getLogLoss()
+    validationLogLoss         = self.getValidationLogLoss()
+    trainingLogLoss       = self.getTrainingLogLoss()
     nbZeroes      = self.nbZeroes
     parser_mode   = self.parser_mode
     dict_to_dump  = {
       "name"        : name,
       "params"      : params,
-      "score"       : score,
-      "logLoss"     : logLoss,
+      "validationLogLoss"       : validationLogLoss,
+      "trainingLogLoss"     : trainingLogLoss,
       "nbZeroes"    : nbZeroes,
       "parser_mode" : parser_mode,
     }
@@ -94,11 +97,11 @@ class Model:
   def dumping_list(self):
     name          = self.name
     params        = self.params
-    score         = self.get_score()
-    logLoss       = self.getLogLoss()
+    validationLogLoss         = self.getValidationLogLoss()
+    trainingLogLoss       = self.getTrainingLogLoss()
     nbZeroes      = self.nbZeroes
     parser_mode   = self.parser_mode
-    list_to_dump  = [name,params,score,logLoss,nbZeroes,parser_mode]
+    list_to_dump  = [name,params,validationLogLoss,trainingLogLoss,nbZeroes,parser_mode]
     return list_to_dump
 
   def __str__(self):
@@ -132,8 +135,7 @@ class Model:
  
   def validate(self):
     path = self.validationPath
-    self.score = self.run_data(path,False)
-    return self.score
+    self.run_data(path,False)
 
   def run_data(self, path,update=False):
     tt = 1
@@ -146,13 +148,13 @@ class Model:
         self.innerValidation(x,y)
       self.refreshed(tt,update)
       tt += 1
-    return self.validation_loss * 1. / tt
+
 
   def refreshed(self, tt, update):
     if tt % self.refreshLine == 0:
       print('Model desc:' + str(self))
       if update:
-        print('%s\tencountered: %d\t training loss: %f' % (datetime.now(), tt, self.getLogLoss()))
+        print('%s\tencountered: %d\t training loss: %f' % (datetime.now(), tt, self.getTrainingLogLoss()))
       else:
         print('%s\tencountered: %d\t validation loss: %f' % (datetime.now(), tt, self.getValidationLogLoss()))
    
@@ -174,7 +176,7 @@ class Model:
   def update(self,x,y):
     self.pretrement(x)
     p = self.predict(x)
-    self.nbIterations += 1
+    self.nbIterationsTraining += 1
     self.loss += logloss(p,y)
     self.loop(p,x,y)
 
@@ -217,44 +219,3 @@ class OLBI(Model):
       self.w[i] -= self.delta * (p - y) * 1. 
       self.w[i] = shrink(self.w[i], self.gamma) 
 
-class PA(Model):
-  def __init__(self,params,wInit):
-    Model.__init__(self,params, wInit)
-    self.name = "PA"
-
-  def update(self, x, y):
-    yBis = 2 * y - 1
-    wTx,n = self.innerProduct(x)
-    sufferLoss = max(0,1 - yBis * wTx)
-    self.nbIterations += 1
-    p = copysign(1,wTx)
-    self.loss += logloss((p + 1.) / 2., y)  # for progressive validation
-    tau = sufferLoss / n
-    for i in x:
-      self.w[i] += tau * yBis * 1.  
-
-  def predict(self,x):
-    wTx,_ = self.innerProduct(x)
-    p = (1 + copysign(1,wTx)) / 2.
-    return p
-
-class PAI(Model):
-  def __init__(self,params,wInit):
-    Model.__init__(self,params, wInit)
-    self.name = "PA-I"
-
-  def update(self, x, y):
-    yBis = 2 * y - 1
-    wTx,n = self.innerProduct(x)
-    sufferLoss = max(0,1 - yBis * wTx)
-    self.nbIterations += 1
-    p = copysign(1,wTx)
-    self.loss += logloss((p + 1.) / 2., y)  # for progressive validation
-    tau = min(self.C,sufferLoss / n)
-    for i in x:
-      self.w[i] -= tau * yBis * 1. 
-
-  def predict(self,x):
-    wTx,_ = self.innerProduct(x)
-    p = (1 + copysign(1,wTx)) / 2.
-    return p

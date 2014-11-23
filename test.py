@@ -36,6 +36,3 @@ class Test:
 
     print("Test ended")
 
-t = Test()
-t.run()
-t.run_multi()

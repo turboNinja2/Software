@@ -140,7 +140,7 @@ class Model:
     descriptionName = dummyString + '_Description.txt'
 
     with open(self.submissionPath + submissionName, 'w') as outfile:
-      data = DataParser(self.trainPath,mode = self.parser_mode)
+      data = DataParser(self.testPath,mode = self.parser_mode)
       outfile.write('id,click\n')
       for ID, x,y  in data.run():
         p = self.predict(x)

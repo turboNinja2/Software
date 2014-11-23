@@ -25,7 +25,6 @@ class Model:
 
     self.name = "Unamed"
 
-
     self.parser_mode = parser_mode
 
     for key in params.keys():
@@ -126,7 +125,6 @@ class Model:
       self.refreshed(tt,update)
       tt += 1
 
-
   def refreshed(self, tt, update):
     if tt % self.refreshLine == 0:
       print('Model desc:' + str(self))
@@ -134,6 +132,23 @@ class Model:
         print('%s\tencountered: %d\t training loss: %f' % (datetime.now(), tt, self.getTrainingLogLoss()))
       else:
         print('%s\tencountered: %d\t validation loss: %f' % (datetime.now(), tt, self.getValidationLogLoss()))
+
+  def writeSubmission(self):
+    dt = datetime.now().__str__()
+    dummyString = ''.join(e for e in dt if e.isalnum())
+    submissionName = dummyString +'_Submission.csv' 
+    descriptionName = dummyString + '_Description.txt'
+
+    with open(self.submissionPath + submissionName, 'w') as outfile:
+      data = DataParser(self.trainPath,mode = self.parser_mode)
+      outfile.write('id,click\n')
+      for ID, x,y  in data.run():
+        p = self.predict(x)
+        outfile.write('%s,%s\n' % (ID, str(p)))
+  
+    with open(self.submissionPath + descriptionName, 'w') as outfile:
+      outfile.write(self.dumping_string())
+
    
   ####################################################################################
   ## CORE FUNCTIONS

@@ -14,6 +14,8 @@ if __name__ == '__main__':
     models.dump()
   if submit :
     model.train()
-    writeSubmission(dataPath,model)
+    print model.trainPath
+    print model.submissionPath
+    model.writeSubmission()
 
   print('Hello World Juju and Ulysse')

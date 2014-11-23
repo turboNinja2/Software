@@ -23,6 +23,7 @@ class DataParser:
   ######################################################################
   ## PARSING METHOD
   def classic(self, line):
+    y = 0
     x = [0]
     for m, feat in enumerate(strip_line(line)):
       if m == 0:
@@ -51,7 +52,6 @@ class DataParser:
     return (ID, x, y)
 
 
-
   PARSING_METHODS = {
     "classic"     : classic,
     "classic2"    : classic2,
@@ -78,7 +78,7 @@ class DataParser:
         self.header = strip_line(line)
         continue
       ID, x, y = self.parsing_method(self, line)
-      yield (ID, x, y) if self.traindata else (ID, x)
+      yield (ID, x, y) 
 
 # The files contains 47 686 525 lines
 def countLines(path):

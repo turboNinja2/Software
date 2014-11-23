@@ -2,8 +2,6 @@ from Model    import *
 from settings import * 
 
 
-
-
 def smallModel(alpha=0.1):
   Learning    = OnlineLinearLearning
 
@@ -42,7 +40,7 @@ def mediumModel(alpha=0.1):
     "refreshLine"     : 100000,
   }
 
-  params = {"alpha":alpha}
+  params = {"alpha" : alpha}
   w = [0.] * D
 
   model = Learning(params, w, **kwargs)

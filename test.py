@@ -6,8 +6,6 @@ from Globals                import *
 from ModelExemple           import smallModel
 
 class Test:
-
-
   def __init__(self):
     self.model = smallModel() 
 

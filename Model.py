@@ -12,38 +12,30 @@ class Model:
   ## INIT FUNCTIONS
 
   def __init__(self, params, wInit, 
-                trainPath       = None,
-                validationPath  = None, 
-                refreshLine     = None,
                 nbZeroesParser  = 2,
-                dumpingPath     = None,
-                jsonDumpingPath = None,
                 parser_mode     = "classic",
+                **kwargs
               ):
     self.params           = params
     self.w                = wInit
 
-    self.nbIterationsTraining     = 0
-    self.nbIterationsValidation     = 0
+    self.nbIterationsTraining   = 0 
+    self.nbIterationsValidation = 0
 
     self.loss             = 0
     self.validation_loss  = 0
 
     self.name             = "Unamed"
 
-    self.trainPath        = trainPath
-    self.validationPath   = validationPath
-    self.dumpingPath      = dumpingPath
-
-    self.refreshLine      = refreshLine
-
     self.nbZeroes         = nbZeroesParser
 
     self.parser_mode      = parser_mode
-    self.jsonDumpingPath  = jsonDumpingPath
 
     for key in params.keys():
       setattr(self, key, params[key])
+
+    for key in kwargs.keys():
+      setattr(self, key, kwargs[key])
 
   def predict(self, x):
     wTx,_ = self.innerProduct(x)

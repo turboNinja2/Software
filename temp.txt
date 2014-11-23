@@ -1,47 +1,33 @@
+#####################################
+settings.py
+
+
 from Globals import *
-from datetime import datetime
+from datetime import *
 from Model import *
 
-num_cores = 7
+num_cores = 3 
 
 #The absolute path to datas
-dataPath = 'C:/Users/JUJulien/Desktop/KAGGLE/Competitions/Avazu/Data/'
+dataPath = "/home/ulysse/euro_project/data/Avazu/"
 
-validation = False
-submit = True
+validation = True
+submit = False
 
-# folders #################################################################
-train_global    = dataPath + 'train.csv'  # path to training file
-test_global     = dataPath + 'test.csv'  # path to testing file
-train_set       = dataPath + 'medium_train_set.csv'  # path to training file
-validation_set  = dataPath + 'medium_validation_set.csv'  # path to testing file
-  
-dt = datetime.now().__str__()
-dummyString = ''.join(e for e in dt if e.isalnum())
-dump            = dataPath + "results/results" + dummyString+ ".csv"
-jsonDump            = dataPath + "results/results_json" + dummyString+ ".csv"
+
+###################################################
+main_settings.py
+
+
+
+from ModelExemple import *
 
 # training and testing
 # #######################################################
 
 model_list = []
 
-for i in range(0,7):
-  model_list.append(LogOnlineLinearLearning({"alpha" : 0.01 * 2 ** (-i)}, 
-    [0] * D,
-    trainPath=train_set,
-    validationPath=validation_set,
-    refreshLine=refreshLine,
-    parser_mode = "classic2",
-    dumpingPath=dump,
-    jsonDumpingPath = jsonDump))
+for i in range(0,2):
+  model_list.append(realModel(0.01 * 2 ** (-i)))
 
-model = LogOnlineLinearLearning({"alpha": 0.00125}, 
-                                [0] * D,
-                                trainPath=train_set,
-                                validationPath=train_set,
-                                refreshLine=refreshLine,
-                                parser_mode = "classic2",
-                                dumpingPath=dump,
-                                jsonDumpingPath = jsonDump)
-
+model = realModel(0.00125)

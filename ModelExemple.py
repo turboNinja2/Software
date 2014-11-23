@@ -1,5 +1,9 @@
 from Model    import *
-from settings import * 
+from settings import dataPath 
+from datetime import datetime 
+ 
+dt = datetime.now().__str__()
+dummyString = ''.join(e for e in dt if e.isalnum())
 
 
 def smallModel(alpha=0.1):
@@ -46,4 +50,28 @@ def mediumModel(alpha=0.1):
 
   model = Learning(params, w, **kwargs)
 
+  return model
+
+def realModel(alpha=0.01):
+  Learning = LogOnlineLinearLearning
+
+  train       = dataPath + 'train_set.csv'  # path to training file
+  validation  = dataPath + 'validation_set.csv'  # path to testing file
+  dump        = dataPath + "results/results" + dummyString + ".csv"
+  json_dump   = dataPath + "results/json_results" + dummyString + ".csv"
+
+  kwargs = {
+    "trainPath"       : train,
+    "validationPath"  : validation,
+    "dumpingPath"     : dump,
+    "jsonDumpingPath" : json_dump,
+    "refreshLine"     : 2.5*pow(10,6),
+    "parser_mode"     : "classic2",
+  }
+
+  params = {"alpha" : alpha}
+  w = [0.] * D
+
+  model = Learning(params, w, **kwargs)
+   
   return model

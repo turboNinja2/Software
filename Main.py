@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from settings         import *
+from main_settings    import *
 from Model            import *
 from Models           import *
 

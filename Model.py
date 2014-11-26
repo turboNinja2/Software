@@ -206,7 +206,7 @@ class LogOnlineLinearLearning(Model):
   def loop(self,p,x,y):
     for i in x:
       self.n[i] += abs(p - y)
-      self.w[i] -= max(min((1 - y) / (1 - p) - y / p,50),-50) * 1. * self.alpha / sqrt(self.n[i])
+      self.w[i] -= max(min((1 - y) / (1 - p) - y / p,10 ** 8),-10 ** 8) * 1. * self.alpha / sqrt(self.n[i])
 
 class ZALMS(Model):
   def __init__(self,params,wInit,**kwargs):

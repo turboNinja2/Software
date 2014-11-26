@@ -10,6 +10,7 @@ class Models:
     self.models = models
     self.para = True
     self.pool = Pool(processes=num_cores)
+
   def train(self):
     if self.para:
       pool = Pool(processes=num_cores)

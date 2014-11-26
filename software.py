@@ -18,13 +18,13 @@ class SoftwareTM():
       model_list.append(mediumModel(scale_function(i)))
     return model_list
 
-
   def first_scale(self):
     init_scale = lambda x : pow(10,-x)
     model_list = self.build_model_list(init_scale)
     self.models = Models(model_list)
     self.x1, self.x2 = self.compute_x12()
     self.models.dump()
+
 
   def next_scale(self):
     for i in xrange(self.step):

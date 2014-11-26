@@ -1,7 +1,6 @@
 from Globals          import *
 from FeatureFunctions import *
 
-
 ########################################################################
 ## TOOLS
 def strip_line(line):
@@ -17,11 +16,46 @@ def hashVect(vect):
     res[i] = abs(hash(vect[i])) % D
   return res
 
+def utilCrossProd(vectString1, vectString2):
+  n = len(vectString1)
+  res = [''] * (n * (n + 1) / 2)
+  index = 0
+  for i in range(n) :
+    for j in range(i,n) :
+      res[index] = vectString1[i] + vectString2[j]
+      index = index + 1
+  return res
+
+def utilCrossProdPure(vectString1, vectString2):
+  n = len(vectString1)
+  res = [''] * (n * (n - 1) / 2)
+  index = 0
+  for i in range(n) :
+    for j in range(i + 1,n) :
+      res[index] = vectString1[i] + vectString2[j]
+      index = index + 1
+  return res
 
 class DataParser:
  
   ######################################################################
   ## PARSING METHOD
+
+  def base(self,line):
+    xString = []
+    y = 0
+    header = self.header
+    for m, feat in enumerate(strip_line(line)):
+      if header[m] == "id":
+        ID = int(feat)
+      elif header[m] == "hour":
+        xString.extend(cutHourAndDay(feat))
+      elif header[m] == "click":
+        y = float(feat)
+      else:
+        xString.append(header[m] + '_' + feat)
+    return(ID,xString,y)
+
   def classic(self, line):
     y = 0
     x = [0]
@@ -35,32 +69,33 @@ class DataParser:
     return (ID, x, y)
 
   def classic2(self, line):
-    xString = ['0']
-    y = 0
-    header = self.header
-    for m, feat in enumerate(strip_line(line)):
-      if header[m] == "id":
-        ID = int(feat)
-      elif header[m] == "hour":
-        xString.extend(cutHourAndDay(feat))
-      elif header[m] == "click":
-        y = float(feat)
-      else:
-        xString.append(header[m] + '_' + feat)
-
+    ID,xString,y = self.base(line)
+    xString.append('0') # the constant
     x = hashVect(xString)
     return (ID, x, y)
 
+  def crossProdPure(self,line):    
+    ID,xString,y = self.base(line)
+    xString = utilCrossProdPure(xString,xString)
+    xString.append('0') # the constant
+    x = hashVect(xString)
+    return (ID, x, y)
+
+  def crossProd(self,line):    
+    ID,xString,y = self.base(line)
+    xString = utilCrossProd(xString,xString)
+    xString.append('0') # the constant
+    x = hashVect(xString)
+    return (ID, x, y)
 
   PARSING_METHODS = {
     "classic"     : classic,
     "classic2"    : classic2,
+    "crossProd" : crossProd,
+    "crossProdPure" : crossProdPure
   }
 
-  PARSING_LENGHT = {
-    "classic"     : 27,
-    "classic2"    : 27,
-  }
+
   ######################################################################
   ## CORE FUNCTIONS
 
@@ -68,7 +103,6 @@ class DataParser:
     self.path = path
     self.mode = mode
     self.parsing_method = self.PARSING_METHODS[mode]
-    self.parsing_lenght = self.PARSING_LENGHT[mode]
     self.traindata = traindata
     self.header = []
 

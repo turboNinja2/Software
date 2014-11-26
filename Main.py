@@ -7,12 +7,12 @@ from Models           import *
 from Export import *
 
 if __name__ == '__main__':
-  if validation :
+  if validationBool :
     models = Models(model_list)
     models.train()
     models.validation()
     models.dump()
-  if submit :
+  if submitBool :
     model.train()
     model.validate()
     print model.trainPath

@@ -3,5 +3,6 @@
 
 from Models import *
 
-s = SoftwareTM()
-s.run()
+if __name__ == "__main__" :
+  s = SoftwareTM()
+  s.run()

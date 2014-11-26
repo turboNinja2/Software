@@ -33,6 +33,7 @@ class Model:
     for key in kwargs.keys():
       setattr(self, key, kwargs[key])
 
+
   ####################################################################################
   ## GETTING FUCNTIONS
 

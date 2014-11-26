@@ -5,55 +5,26 @@ from settings         import *
 from multiprocessing  import Process, Queue
 from ModelExemple     import *
 
-def tem_update(model):
-  model.train()
-  return model
-
-def update_model(q,model):
-  q.put(tem_update(model))
-
-def tem_run(model):
-  model.validate()
-  return model
-
-def run_model(q,model):
-  q.put(tem_run(model))
-
 class Models:
   def __init__(self, models):
     self.models = models
     self.para = True
     self.q = Queue()
     self.pool = Pool(processes=num_cores)
-
   def train(self):
     if self.para:
-      self.models = self.pool.map(tem_update,self.models)
-      """
-      ps = map(lambda x : Process(target=update_model, args=(self.q,x)), self.models)
-      for p in ps:
-        p.start()
-      models = []
-      for i in xrange(len(ps)):
-        models.append(self.q.get())
-      self.models = models
-      """
+      pool = Pool(processes=num_cores)
+      pool.map(lambda x : x.train(),self.models)
+      pool.close()
     else:
       for model in self.models :
         model.train()
 
   def validation(self):
     if self.para:
-      self.models = self.pool.map(tem_run,self.models)
-      """
-      ps = map(lambda x : Process(target=run_model, args=(self.q,x)), self.models)
-      for p in ps:
-        p.start()
-      models = []
-      for i in xrange(len(ps)):
-        models.append(self.q.get())
-      self.models = models
-      """
+      pool = Pool(processes=num_cores)
+      pool.map(lambda x : x.validate(),self.models)
+      pool.close()
     else:
       for model in self.models :
         model.validate()
@@ -65,8 +36,8 @@ class Models:
 class SoftwareTM():
   
   def __init__(self):
-    self.step       = 5 
-    self.step_range = 5 
+    self.step       = 6 
+    self.step_range = 3 
 
   def compute_x12(self):
     self.models.train()
@@ -93,7 +64,7 @@ class SoftwareTM():
       model_list = self.build_model_list(scale)
       self.models = Models(model_list)
       self.x1, self.x2 = self.compute_x12()
-      print "step %s done" % (i,)
+      print "step %s done" % i
 
   def run(self):
     self.first_scale()

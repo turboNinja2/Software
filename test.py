@@ -9,7 +9,7 @@ class Test:
   def __init__(self):
     self.model = smallModel() 
 
-    self.expected    = 0.4496386388256323751733134486130438745021820068359375
+    self.expected    = 0.479075086746664269288231707832892425358295440673828125
 
   def run(self):
     self.model.train()
@@ -20,7 +20,7 @@ class Test:
     if found == self.expected:
       print("We're Good !")
     else:
-      print("Houston, we got a problem. Found : %s, Expected : %s" % (found, self.expected))
+      print("Houston, we got a problem. Found : %.70f, Expected : %s" % (found, self.expected))
       print found-self.expected
 
   def run_multi(self):

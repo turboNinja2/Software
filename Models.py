@@ -23,21 +23,11 @@ class Models:
   def __init__(self, models):
     self.models = models
     self.para = True
-    self.q = Queue()
     self.pool = Pool(processes=num_cores)
 
   def train(self):
     if self.para:
       self.models = self.pool.map(tem_update,self.models)
-      """
-      ps = map(lambda x : Process(target=update_model, args=(self.q,x)), self.models)
-      for p in ps:
-        p.start()
-      models = []
-      for i in xrange(len(ps)):
-        models.append(self.q.get())
-      self.models = models
-      """
     else:
       for model in self.models :
         model.train()
@@ -45,15 +35,6 @@ class Models:
   def validation(self):
     if self.para:
       self.models = self.pool.map(tem_run,self.models)
-      """
-      ps = map(lambda x : Process(target=run_model, args=(self.q,x)), self.models)
-      for p in ps:
-        p.start()
-      models = []
-      for i in xrange(len(ps)):
-        models.append(self.q.get())
-      self.models = models
-      """
     else:
       for model in self.models :
         model.validate()
@@ -66,7 +47,7 @@ class SoftwareTM():
   
   def __init__(self):
     self.step       = 5 
-    self.step_range = 5 
+    self.step_range = 2 
 
   def compute_x12(self):
     self.models.train()
@@ -86,13 +67,16 @@ class SoftwareTM():
     model_list = self.build_model_list(init_scale)
     self.models = Models(model_list)
     self.x1, self.x2 = self.compute_x12()
+    self.models.dump()
 
   def next_scale(self):
     for i in xrange(self.step):
+      del self.models
       scale = lambda x : self.x2 + float(x)*(self.x1-self.x2)/(self.step_range-1)
       model_list = self.build_model_list(scale)
       self.models = Models(model_list)
       self.x1, self.x2 = self.compute_x12()
+      self.models.dump()
       print "step %s done" % (i,)
 
   def run(self):

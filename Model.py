@@ -33,6 +33,11 @@ class Model:
     for key in kwargs.keys():
       setattr(self, key, kwargs[key])
 
+    try:
+      kwargs["max_iterations"]
+    except:
+      self.max_iterations = None
+
   ####################################################################################
   ## GETTING FUCNTIONS
 
@@ -124,6 +129,9 @@ class Model:
         self.innerValidation(x,y)
       self.refreshed(tt,update)
       tt += 1
+      if self.max_iterations is not None and self.max_iterations == tt:
+        break
+    print "iterations : %s " % tt
 
   def refreshed(self, tt, update):
     if tt % self.refreshLine == 0:
@@ -241,3 +249,14 @@ class Perceptron(Model):
     if (y - 0.5) * (p - 0.5) <= 0: # if the predictions disagree
       for i in x: # contribution of each feature is corrected
         self.w[i] += (y - 0.5) * 2.
+
+class Amazing(Model):
+  def __init__(self,params, wInit,**kwargs):
+    Model.__init__(self,params, wInit,**kwargs)
+    self.name = "Amazing Algorithm"
+
+  def predict(self, x):
+    return 0.17
+  
+  def loop(self,p,x,y):
+    pass

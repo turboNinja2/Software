@@ -112,10 +112,12 @@ class Model:
   def train(self):
     path = self.trainPath
     self.run_data(path,update=True)
+    return self
  
   def validate(self):
     path = self.validationPath
     self.run_data(path,False)
+    return self
 
   def run_data(self, path,update=False):
     tt = 1

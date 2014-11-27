@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 
-from Models import *
+from software import *
+from software_settings import kwargs
 
 if __name__ == "__main__" :
-  s = SoftwareTM()
+  s = SoftwareTM(**kwargs)
   s.run()

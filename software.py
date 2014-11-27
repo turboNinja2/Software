@@ -2,20 +2,29 @@ from Models import *
 
 class SoftwareTM():
   
-  def __init__(self):
-    self.step       = 5 
-    self.step_range = 2 
+  def __init__(self,xmin=None,xmax=None,model=None,step=1,step_range=1):
+    self.step       = step
+    self.step_range = step_range
+    self.x1 = xmin
+    self.x2 = xmax
+    if model is None:
+      self.model = smallModel
+    else:
+      self.model = model
+    self.models = []
+    self.result = []
 
   def compute_x12(self):
     self.models.train()
     self.models.validation()
+    self.result.extend(map(lambda x : (x.alpha, x.getValidationLogLoss()), self.models.models))
     x1,x2 = truc(self.models)
     return x1, x2
 
   def build_model_list(self, scale_function):
     model_list = []
     for i in xrange(self.step_range):
-      model_list.append(mediumModel(scale_function(i)))
+      model_list.append(self.model(scale_function(i)))
     return model_list
 
   def first_scale(self):
@@ -28,16 +37,17 @@ class SoftwareTM():
 
   def next_scale(self):
     for i in xrange(self.step):
-      del self.models
       scale = lambda x : self.x2 + float(x)*(self.x1-self.x2)/(self.step_range-1)
       model_list = self.build_model_list(scale)
+      del self.models
       self.models = Models(model_list)
       self.x1, self.x2 = self.compute_x12()
       self.models.dump()
       print "step %s done" % (i,)
 
   def run(self):
-    self.first_scale()
+    if self.x1 is None:
+      self.first_scale()
     self.next_scale()
 
 def truc(models):

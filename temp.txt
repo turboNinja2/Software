@@ -1,33 +1,7 @@
-#####################################
-settings.py
+kwargs = {
+  "xmin":0.0033484375,
+  "xmax":0.0036578125,
+  "step":5,
+  "step_range":5,
+}
 
-
-from Globals import *
-from datetime import *
-from Model import *
-
-num_cores = 3 
-
-#The absolute path to datas
-dataPath = "/home/ulysse/euro_project/data/Avazu/"
-
-validation = True
-submit = False
-
-
-###################################################
-main_settings.py
-
-
-
-from ModelExemple import *
-
-# training and testing
-# #######################################################
-
-model_list = []
-
-for i in range(0,2):
-  model_list.append(realModel(0.01 * 2 ** (-i)))
-
-model = realModel(0.00125)

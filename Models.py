@@ -9,12 +9,11 @@ class Models:
   def __init__(self, models):
     self.models = models
     self.para = True
-    self.pool = Pool(processes=num_cores)
 
   def train(self):
     if self.para:
       pool = Pool(processes=num_cores)
-      pool.map(lambda x : x.train(),self.models)
+      self.models = pool.map(lambda x : x.train(),self.models)
       pool.close()
     else:
       for model in self.models :
@@ -23,7 +22,7 @@ class Models:
   def validation(self):
     if self.para:
       pool = Pool(processes=num_cores)
-      pool.map(lambda x : x.validate(),self.models)
+      self.models = pool.map(lambda x : x.validate(),self.models)
       pool.close()
     else:
       for model in self.models :

@@ -1,6 +1,5 @@
 *.pyc
 *.pyproj
 *.swp
-settings.py
-main_settings.py
+*settings.py
 data/

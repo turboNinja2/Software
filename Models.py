@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-from multiprocessing  import Pool
 from settings         import *
-from multiprocessing  import Process, Queue
+from multiprocessing  import Pool, Process, Queue
 from ModelExemple     import *
 
 class Models:
@@ -31,4 +30,9 @@ class Models:
   def dump(self):
     for model in self.models :
       model.dump_score()
+  
+  def writeSubmissions(self):
+    for model in self.models :
+      model.writeSubmission()
+
 

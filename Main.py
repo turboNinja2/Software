@@ -2,9 +2,8 @@
 
 from settings         import *
 from main_settings    import *
-from Model            import *
+from CustomModels     import *
 from Models           import *
-from Export import *
 
 if __name__ == '__main__':
   if validationBool :
@@ -12,6 +11,8 @@ if __name__ == '__main__':
     models.train()
     models.validation()
     models.dump()
+    if multipleSubmissions :
+      models.writeSubmissions()
   if submitBool :
     model.train()
     model.validate()

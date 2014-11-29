@@ -1,4 +1,4 @@
-from Model    import *
+from CustomModels    import *
 from settings import dataPath 
 from datetime import datetime 
  
@@ -13,9 +13,12 @@ def smallModel(alpha=0.1,**kwargs):
   validation  = dataPath + "validation_set.csv"
   dump        = dataPath + "results/test_results.csv"
   json_dump   = dataPath + "results/test_json_results.csv" 
+  submissionPath   = dataPath + "results/test_submission.csv" 
 
   kwargs.update({
     "trainPath"       : train,
+    "submissionPath" : submissionPath,
+    "testPath" : train,
     "validationPath"  : validation,
     "dumpingPath"     : dump,
     "jsonDumpingPath" : json_dump,

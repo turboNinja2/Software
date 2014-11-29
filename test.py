@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from settings               import *
-from Model                  import *
+from CustomModels           import *
 from Globals                import *
 from ModelExemple           import *
 

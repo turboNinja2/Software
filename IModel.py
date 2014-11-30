@@ -134,7 +134,7 @@ class Model:
       tt += 1
       if self.max_iterations is not None and self.max_iterations == tt:
         break
-    print "iterations : %s " % tt
+    print("iterations : %s " % tt)
 
   def refreshed(self, tt, update):
     if tt % self.refreshLine == 0:

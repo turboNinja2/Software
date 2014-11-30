@@ -13,11 +13,14 @@ if __name__ == '__main__':
     models.dump()
     if multipleSubmissions :
       models.writeSubmissions()
-  if submitBool :
-    model.train()
-    model.validate()
-    print model.trainPath
-    print model.submissionPath
-    model.writeSubmission()
+
+  if validationBool :
+    models2 = Models(model_list2)
+    models2.train()
+    models2.validation()
+    models2.dump()
+    if multipleSubmissions :
+      models2.writeSubmissions()
+
 
   print('Hello World Juju and Ulysse')

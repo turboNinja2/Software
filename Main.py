@@ -16,8 +16,8 @@ if __name__ == '__main__':
   if submitBool :
     model.train()
     model.validate()
-    print model.trainPath
-    print model.submissionPath
+    print(model.trainPath)
+    print(model.submissionPath)
     model.writeSubmission()
 
   print('Hello World Juju and Ulysse')

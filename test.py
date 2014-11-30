@@ -21,7 +21,7 @@ class Test:
       print("We're Good !")
     else:
       print("Houston, we got a problem. Found : %.70f, Expected : %s" % (found, self.expected))
-      print found-self.expected
+      print(found-self.expected)
 
   def run_multi(self):
     from Models import Models 

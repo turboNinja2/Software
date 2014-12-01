@@ -11,11 +11,11 @@ class Model:
   ####################################################################################
   ## INIT FUNCTIONS
 
-  def __init__(self, params, wInit, 
+  def __init__(self, params, 
                 parser_mode="classic",
                 **kwargs):
     self.params = params
-    self.w = wInit
+    self.w = [0.] * D
 
     self.nbIterationsTraining = 0 
     self.nbIterationsValidation = 0
@@ -196,8 +196,8 @@ class Model:
 ######################################################################################
 ## CUSTOM MODELS
 class OnlineLinearLearning(Model):
-  def __init__(self,params,wInit,**kwargs):
-    Model.__init__(self,params, wInit, **kwargs)
+  def __init__(self,params,**kwargs):
+    Model.__init__(self,params,**kwargs)
     self.n = [0] * len(wInit)
     self.name = "Online method"
 
@@ -207,9 +207,9 @@ class OnlineLinearLearning(Model):
       self.w[i] -= (p - y) * 1. * self.alpha / sqrt(self.n[i])
 
 class LogOnlineLinearLearning(Model):
-  def __init__(self,params,wInit,**kwargs):
-    Model.__init__(self,params, wInit, **kwargs)
-    self.n = [0] * len(wInit)
+  def __init__(self,params,**kwargs):
+    Model.__init__(self,params,**kwargs)
+    self.n = [0] * D
     self.name = "Log Online method"
 
   def loop(self,p,x,y):
@@ -218,8 +218,8 @@ class LogOnlineLinearLearning(Model):
       self.w[i] -= max(min((1 - y) / (1 - p) - y / p,10 ** 8),-10 ** 8) * 1. * self.alpha / sqrt(self.n[i])
 
 class ZALMS(Model):
-  def __init__(self,params,wInit,**kwargs):
-    Model.__init__(self,params, wInit,**kwargs)
+  def __init__(self,params,**kwargs):
+    Model.__init__(self,params,**kwargs)
     self.name = "ZALMS"
 
   def loop(self,p,x,y):
@@ -227,8 +227,8 @@ class ZALMS(Model):
       self.w[i] -= self.delta * ((p - y) * 1. + self.rho * copysign(self.w[i],1))
 
 class OLBI(Model):
-  def __init__(self,params,wInit,**kwargs):
-    Model.__init__(self,params, wInit,**kwargs)
+  def __init__(self,params,**kwargs):
+    Model.__init__(self,params,**kwargs)
     self.name = "OLBI"
 
   def loop(self,p,x,y):
@@ -237,8 +237,8 @@ class OLBI(Model):
       self.w[i] = shrink(self.w[i], self.gamma) 
 
 class Perceptron(Model):
-  def __init__(self,params,wInit,**kwargs):
-    Model.__init__(self,params, wInit,**kwargs)
+  def __init__(self,params,**kwargs):
+    Model.__init__(self,params,**kwargs)
     self.name = "Perceptron"
 
   def predict(self,x):
@@ -252,8 +252,8 @@ class Perceptron(Model):
         self.w[i] += (y - 0.5) * 2.
 
 class Perceptron2(Model):
-  def __init__(self,params,wInit,**kwargs):
-    Model.__init__(self,params, wInit,**kwargs)
+  def __init__(self,params,**kwargs):
+    Model.__init__(self,params,**kwargs)
     self.name = "Perceptron2"
 
   def predict(self,x):
@@ -267,8 +267,8 @@ class Perceptron2(Model):
         self.w[i] += min(max(-1, (y - 0.5) * 2.),1)
 
 class FTRLProximal(Model):
-  def __init__(self,params,wInit,**kwargs):
-    Model.__init__(self,params, wInit,**kwargs)
+  def __init__(self,params,**kwargs):
+    Model.__init__(self,params,**kwargs)
     self.name = "FTRLProximal"
     self.z = [0] * D
     self.sigma = [0] * D

@@ -9,8 +9,8 @@ dummyString = ''.join(e for e in dt if e.isalnum())
 def smallModel(alpha=0.1,**kwargs):
   Learning    = OnlineLinearLearning
 
-  train       = dataPath + "train_set.csv"
-  validation  = dataPath + "validation_set.csv"
+  train       = dataPath + "small_train_set.csv"
+  validation  = dataPath + "small_validation_set.csv"
   dump        = dataPath + "results/test_results.csv"
   json_dump   = dataPath + "results/test_json_results.csv" 
 
@@ -24,16 +24,14 @@ def smallModel(alpha=0.1,**kwargs):
   })
 
   params = {"alpha":alpha}
-  w = [0.] * D
 
-  model = Learning(params, w, **kwargs)
+  model = Learning(params,**kwargs)
   return model
 
-def mediumModel(alpha=0.1,**kwargs):
-  Learning    = LogOnlineLinearLearning
+def mediumModel(alpha=0.1,model=OnlineLinearLearning,**kwargs):
 
-  train       = dataPath + 'train_set.csv'
-  validation  = dataPath + 'medium_validation_set.csv'
+  train       = dataPath + 'test.csv'
+  validation  = dataPath + 'test.csv'
   dump        = dataPath + "results/medium_results.csv"
   json_dump   = dataPath + "results/medium_json_results.csv"
 
@@ -48,9 +46,8 @@ def mediumModel(alpha=0.1,**kwargs):
   })
 
   params = {"alpha" : alpha}
-  w = [0.] * D
 
-  model = Learning(params, w, **kwargs)
+  model = model(params,**kwargs)
 
   return model
 
@@ -72,8 +69,7 @@ def realModel(alpha=0.01,**kwargs):
   })
 
   params = {"alpha" : alpha}
-  w = [0.] * D
 
-  model = Learning(params, w, **kwargs)
+  model = Learning(params,**kwargs)
    
   return model

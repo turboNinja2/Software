@@ -13,12 +13,13 @@ class SoftwareTM():
       self.model = model
     self.models = []
     self.result = []
+    self.algo   = dichotomie
 
   def compute_x12(self):
     self.models.train()
     self.models.validation()
     self.result.extend(map(lambda x : (x.alpha, x.getValidationLogLoss()), self.models.models))
-    x1,x2 = truc(self.models)
+    x1,x2 = self.algo(self.result)
     return x1, x2
 
   def build_model_list(self, scale_function):
@@ -37,22 +38,22 @@ class SoftwareTM():
 
   def next_scale(self):
     for i in xrange(self.step):
-      scale = lambda x : self.x2 + float(x)*(self.x1-self.x2)/(self.step_range-1)
+      scale = lambda x : self.x2 + float(x+1)*(self.x1-self.x2)/(self.step_range+1)
       model_list = self.build_model_list(scale)
       del self.models
       self.models = Models(model_list)
       self.x1, self.x2 = self.compute_x12()
       self.models.dump()
       print "step %s done" % (i,)
+      print self.result
 
   def run(self):
     if self.x1 is None:
       self.first_scale()
     self.next_scale()
 
-def truc(models):
-  r = map(lambda x : (x.getValidationLogLoss(),x.params["alpha"]),models.models)
-  r.sort(key=lambda x : x[1])
+def dichotomie(r):
+  r.sort(key=lambda x : x[0])
   print(r)
   r_min = 10
   i_min = -1
@@ -61,14 +62,14 @@ def truc(models):
       r_min = value[0]
       i_min = i
   if i_min == 0:
-    x1 = r[0][1]
-    x2 = r[1][1]
+    x1 = r[0][0]
+    x2 = r[1][0]
   elif i_min == len(r)-1:
-    x1 = r[len(r)-2][1]
-    x2 = r[len(r)-1][1]
+    x1 = r[len(r)-2][0]
+    x2 = r[len(r)-1][0]
   else:
-    x1 = r[i_min-1][1]
-    x2 = r[i_min+1][1]
+    x1 = r[i_min-1][0]
+    x2 = r[i_min+1][0]
     
   print(x1)
   print(x2)

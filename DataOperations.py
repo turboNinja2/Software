@@ -1,5 +1,6 @@
 from Globals          import *
 from FeatureFunctions import *
+from random import *
 
 ########################################################################
 ## TOOLS
@@ -146,3 +147,15 @@ def createValidationSet(inputPath,filename,small=False,medium=False):
           return
         else:
           outfileValidation.write(line)
+
+def createRandomSet(inputPath,filename,selectedSeed) :
+  seed(selectedSeed * 123456789)
+  inputFile = inputPath + filename
+  with open(inputPath + 'train_seed' + str(selectedSeed ) + '.csv', 'w') as randomizedFile:
+    for t, line in enumerate(open(inputFile)):
+      if t == 0:
+        header = line
+        randomizedFile.write(header)
+        continue
+      if random() > 0.7:
+        randomizedFile.write(line)

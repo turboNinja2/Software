@@ -85,6 +85,7 @@ class RandomNeuralNetwork(Model):
     self.neurons = []
     self.signals = []
     self.n = []
+    self.proba = self.maxNeurons * 1. / 30000000
 
   def neuronActivate(self,neuron,x):
       res = 0
@@ -109,7 +110,7 @@ class RandomNeuralNetwork(Model):
         return 0.5
 
   def loop(self,p,x,y):
-      if (random() < 0.0001) and (len(self.neurons) < self.maxNeurons):
+      if  (len(self.neurons) < self.maxNeurons) and (random() < self.proba):
           self.neurons.append(x)
           if len(self.neurons) == self.maxNeurons :
              print("Maximum number of neurons reached")

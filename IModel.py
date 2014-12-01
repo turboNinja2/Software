@@ -2,6 +2,7 @@ from math           import *
 from DataOperations import *
 from datetime       import datetime
 from tools.misc     import *
+import gc
 
 import csv
 import json
@@ -37,6 +38,12 @@ class Model:
       kwargs["max_iterations"]
     except:
       self.max_iterations = None
+
+  def s_clear(self):
+    self.w = []
+    self.n = []
+    gc.collect()
+
 
   ####################################################################################
   ## GETTING FUCNTIONS

@@ -32,7 +32,7 @@ def average(path,files,descs):
 
 
 dataPath = 'C:/Users/JUJulien/Desktop/KAGGLE/Competitions/Avazu/Data/'
-submissionPath = dataPath + 'submissions/OnLineLinearLearning/avgs/'
+submissionPath = dataPath + 'submissions/calibration/'
 
 submissions = []
 

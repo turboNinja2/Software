@@ -9,8 +9,8 @@ dummyString = ''.join(e for e in dt if e.isalnum())
 def smallModel(alpha=0.1,**kwargs):
   Learning    = OnlineLinearLearning
 
-  train       = dataPath + "small_train_set.csv"
-  validation  = dataPath + "small_validation_set.csv"
+  train       = dataPath + "train_set.csv"
+  validation  = dataPath + "validation_set.csv"
   dump        = dataPath + "results/test_results.csv"
   json_dump   = dataPath + "results/test_json_results.csv" 
   submissionPath   = dataPath + "results/test_submission.csv" 

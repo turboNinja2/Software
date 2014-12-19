@@ -6,6 +6,7 @@ import csv
 from parser import parser
 from math   import *
 from tools.misc import logloss
+from density import Density
 file_name1 = "csvtest/20141201231852094000_Avg.csv"
 file_name2 = "csvtest/validation_set.csv"
 #file_name1 = "lol.csv"
@@ -17,6 +18,11 @@ def f(x):
   elif x > 0.99:
     return 1
   return x
+
+d = Density()
+d.build()
+f = d.adjust
+
 
 spam_reader1 = parser(file_name1)
 spam_reader2 = parser(file_name2)
@@ -31,7 +37,6 @@ for row1 in spam_reader1:
     continue
   score += logloss(f(float(row1[1])),float(row2[1]))
   if f(float(row1[1]))  == 1 - float(row2[1]):
-    print row1[0]
     bad += 1
   if f(float(row1[1])) == float(row2[1]):
     good += 1

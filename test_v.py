@@ -20,8 +20,11 @@ def f(x):
   return x
 
 d = Density()
-d.build()
-f = d.adjust
+#d.build()
+#f = d.adjust
+
+def f(x):
+  return x
 
 
 spam_reader1 = parser(file_name1)

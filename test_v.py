@@ -19,9 +19,11 @@ def f(x):
     return 1
   return x
 
+
 d = Density()
-d.build()
+d.run()
 f = d.adjust
+print "model build"
 
 
 spam_reader1 = parser(file_name1)
@@ -36,10 +38,6 @@ for row1 in spam_reader1:
   if count == 1:
     continue
   score += logloss(f(float(row1[1])),float(row2[1]))
-  if f(float(row1[1]))  == 1 - float(row2[1]):
-    bad += 1
-  if f(float(row1[1])) == float(row2[1]):
-    good += 1
 
 print score/count
 print "good : %s, bad : %s" % (good, bad)

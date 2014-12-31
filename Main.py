@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from settings         import *
-from main_settings    import *
+from algo_settings    import *
 from CustomModels     import *
 from Models           import *
 

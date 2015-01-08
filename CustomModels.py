@@ -127,6 +127,16 @@ class RandomNeuralNetwork(Model):
           self.signals.append((y - 0.5) * 2)
 
 class FTRLProximal(Model):
+  
+  PARAMS_KEYS = {
+    "alpha" : float,
+    "beta" : float,
+    "lambda1" : float,
+    "lambda2" : float,
+    "approx"  : float,
+  }
+
+
   def __init__(self,params,**kwargs):
     Model.__init__(self,params,**kwargs)
     self.name = "FTRLProximal"

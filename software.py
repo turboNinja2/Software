@@ -28,9 +28,7 @@ class SoftwareTM():
     self.algo   = foo#dichotomie
 
   def compute_x12(self):
-    self.models.train()
-    self.models.validation()
-    self.result.extend(map(lambda x : (x.params, x.getValidationLogLoss()), self.models.models))
+    self.result.extend(self.models.train_validated_dump_and_clear())
     self.inf_bounds, self.sup_bounds = self.algo(self.result)
 
   def build_model_list(self, scale_functions):
@@ -45,7 +43,7 @@ class SoftwareTM():
       for param in self.params.keys():
         params_dict[param] = scale_functions[param](int(i/pow(step,j)) % step)
         j += 1
-      model_list.append(self.model(**{"params":dict(params_dict)}))
+      model_list.append((self.model,{"params":dict(params_dict)}))
 
     return model_list
 
@@ -65,9 +63,8 @@ class SoftwareTM():
   def first_scale(self):
     init_scale = self._build_init_scale()
     model_list = self.build_model_list(init_scale)
-    self.models = Models(model_list)
+    self.models = Models(model_list,True)
     self.compute_x12()
-    self.models.dump()
 
 
   def next_scale(self):
@@ -75,9 +72,8 @@ class SoftwareTM():
       scale = self._build_next_scale()
       model_list = self.build_model_list(scale)
       del self.models
-      self.models = Models(model_list)
+      self.models = Models(model_list,True)
       self.compute_x12()
-      self.models.dump()
       print "step %s done" % (i,)
       print self.result
 

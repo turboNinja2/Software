@@ -1,7 +1,27 @@
-kwargs = {
-  "xmin":0.0033484375,
-  "xmax":0.0036578125,
-  "step":5,
-  "step_range":5,
+
+from ModelExemple import *
+
+
+#########################################################
+## MAIN SETTINGS
+
+model_list = []
+
+"""
+for i in range(0,2):
+  model_list.append(realModel(0.01 * 2 ** (-i)))
+"""
+
+model = realModel(0.00125)
+
+#########################################################
+## SOFTWARE SETTINGS
+
+software_kwargs = {
+  #"inf_bound"   : {"alpha":0.0033484375},
+  #"sup_bound"   : {"alpha":0.0036578125},
+  "step"        : 2,
+  "step_range"  : 4,
+  "model"       : smallModel,
 }
 

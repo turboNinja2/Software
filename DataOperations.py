@@ -108,12 +108,15 @@ class DataParser:
     self.header = []
 
   def run(self):
-    for t, line in enumerate(open(self.path)):
+    opened_file = open(self.path)
+    for t, line in enumerate(opened_file):
       if t == 0:
         self.header = strip_line(line)
         continue
       ID, x, y = self.parsing_method(self, line)
       yield (ID, x, y) 
+    opened_file.close()
+    
 
 # The files contains 47 686 525 lines
 def countLines(path):

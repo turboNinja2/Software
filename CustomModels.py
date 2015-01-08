@@ -8,6 +8,11 @@ from random import random
 ######################################################################################
 ## CUSTOM MODELS
 class OnlineLinearLearning(Model):
+  
+  PARAMS_KEYS = {
+    "alpha" : float,
+  }
+
   def __init__(self,params,**kwargs):
     Model.__init__(self,params,**kwargs)
     self.n = [0] * D
@@ -19,6 +24,11 @@ class OnlineLinearLearning(Model):
       self.w[i] -= (p - y) * 1. * self.alpha / sqrt(self.n[i])
 
 class LogOnlineLinearLearning(Model):
+
+  PARAMS_KEYS = {
+    "alpha" : float,
+  }
+
   def __init__(self,params,**kwargs):
     Model.__init__(self,params,**kwargs)
     self.n = [0] * D

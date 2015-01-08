@@ -7,7 +7,7 @@ from ModelExemple     import *
 class Models:
   def __init__(self, models):
     self.models = models
-    self.para = True
+    self.para = False
 
   def train(self):
     if self.para:

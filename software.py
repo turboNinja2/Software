@@ -1,56 +1,91 @@
 from Models import *
 
 class SoftwareTM():
+
+
+  INIT_SCALE = {
+      str(type(0.1)) : lambda x : pow(10,-x),
+      str(type(1))   : lambda x : x,
+  }
+
+  SCALE = {
+    str(type(0.1)) : lambda x1, x2, step_range : (lambda x : x2 + float(x+1)*(x1-x2)/(step_range+1)),
+    str(type(1))   : lambda x1, x2, step_range : lambda x : x
+  }
   
-  def __init__(self,xmin=None,xmax=None,model=None,step=1,step_range=1):
+  def __init__(self,inf_bounds=None,sup_bounds=None,model=None,step=1,step_range=1):
     self.step       = step
     self.step_range = step_range
-    self.x1 = xmin
-    self.x2 = xmax
+    self.inf_bounds = inf_bounds
+    self.sup_bounds = sup_bounds
     if model is None:
       self.model = smallModel
     else:
       self.model = model
+    self.params = self.model.PARAMS_KEYS
     self.models = []
     self.result = []
-    self.algo   = dichotomie
+    self.algo   = foo#dichotomie
 
   def compute_x12(self):
     self.models.train()
     self.models.validation()
-    self.result.extend(map(lambda x : (x.alpha, x.getValidationLogLoss()), self.models.models))
-    x1,x2 = self.algo(self.result)
-    return x1, x2
+    self.result.extend(map(lambda x : (x.params, x.getValidationLogLoss()), self.models.models))
+    self.inf_bounds, self.sup_bounds = self.algo(self.result)
 
-  def build_model_list(self, scale_function):
+  def build_model_list(self, scale_functions):
     model_list = []
-    for i in xrange(self.step_range):
-      model_list.append(self.model(scale_function(i)))
+    # Defining local vars
+    param_number = len(self.params.keys())
+    params_dict = {}
+    step = self.step_range
+    # Updating params dict
+    for i in xrange(pow(step,param_number)):
+      j = 0
+      for param in self.params.keys():
+        params_dict[param] = scale_functions[param](int(i/pow(step,j)) % step)
+        j += 1
+      model_list.append(self.model(**{"params":dict(params_dict)}))
+
     return model_list
 
+  def _build_init_scale(self):
+    result = {}
+    for param in self.params:
+      result[param] = self.INIT_SCALE[str(self.params[param])]
+    return result
+
+  def _build_next_scale(self):
+    result = {}
+    for param in self.params:
+      result[param] = self.SCALE[str(self.params[param])](self.inf_bounds[param],self.sup_bounds[param],self.step_range)
+    return result
+
+
   def first_scale(self):
-    init_scale = lambda x : pow(10,-x)
+    init_scale = self._build_init_scale()
     model_list = self.build_model_list(init_scale)
     self.models = Models(model_list)
-    self.x1, self.x2 = self.compute_x12()
+    self.compute_x12()
     self.models.dump()
 
 
   def next_scale(self):
     for i in xrange(self.step):
-      scale = lambda x : self.x2 + float(x+1)*(self.x1-self.x2)/(self.step_range+1)
+      scale = self._build_next_scale()
       model_list = self.build_model_list(scale)
       del self.models
       self.models = Models(model_list)
-      self.x1, self.x2 = self.compute_x12()
+      self.compute_x12()
       self.models.dump()
       print "step %s done" % (i,)
       print self.result
 
   def run(self):
-    if self.x1 is None:
+    if self.inf_bounds is None:
       self.first_scale()
     self.next_scale()
+    print find_best_param(self.result)
 
 def dichotomie(r):
   r.sort(key=lambda x : x[0])
@@ -75,5 +110,45 @@ def dichotomie(r):
   print(x2)
   return x1,x2
 
+def foo(list_score):
+  #Finding the minimum
+  #Fonctionne uniquement pour les fonctions convexes suivant toutes les variables
+  inf_bounds = {}
+  sup_bounds = {}
+  best_score, best_params = find_best_param(list_score)
 
 
+  for param_name in list_score[0][0].keys():
+    x1, x2 = find_bounds(list_score, param_name,best_params[param_name])
+    inf_bounds[param_name] = x1
+    sup_bounds[param_name] = x2
+
+  return inf_bounds, sup_bounds
+
+def find_best_param(list_score):
+  r_min = 100
+  best_params = None
+  for params, score in list_score:
+    if score < r_min:
+      r_min       = score
+      best_params = params
+  return r_min, best_params
+
+ 
+
+
+def find_bounds(list_score,param_name,best_param):
+  inf_bound = best_param
+  sup_bound = best_param
+  for param, score in list_score:
+    v = param[param_name]
+    if best_param == inf_bound and v < best_param:
+      inf_bound = v
+    if v < best_param and v > inf_bound:
+      inf_bound = v
+    if best_param == sup_bound and v > best_param:
+      sup_bound = v
+    if v > best_param and v < sup_bound:
+      sup_bound = v
+  return inf_bound, sup_bound
+  

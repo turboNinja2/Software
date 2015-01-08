@@ -16,6 +16,14 @@ class Model:
                 parser_mode="classic",
                 **kwargs):
     self.params = params
+    for param in params.keys():
+      if param not in self.PARAMS_KEYS.keys():
+        raise Exception("Param Unkown %s" % param)
+      elif type(params[param]) != self.PARAMS_KEYS[param]:
+        raise Exception("Bad param's type for %s. Excepted : %s, Received : %s" % (param, str(self.PARAMS_KEYS[param]),str(type(params[param]))))
+    for param in self.PARAMS_KEYS.keys():
+      if param not in params.keys():
+        raise Exception("Param not found : %s" % param)
     self.w = [0.] * D
 
     self.nbIterationsTraining = 0 
@@ -141,6 +149,7 @@ class Model:
       tt += 1
       if self.max_iterations is not None and self.max_iterations == tt:
         break
+    del data
     print("iterations : %s " % tt)
 
   def refreshed(self, tt, update):

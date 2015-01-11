@@ -1,4 +1,5 @@
 from CustomModels    import *
+from IModel          import Model
 from settings import dataPath 
 from datetime import datetime 
  
@@ -6,7 +7,12 @@ dt = datetime.now().__str__()
 dummyString = ''.join(e for e in dt if e.isalnum())
 
 model_exemple = OnlineLinearLearning
+model_exemple = FTRLProximal
 real_model = LogOnlineLinearLearning
+
+TRAIN       = dataPath + "train_set.csv"
+VALIDATION  = dataPath + "validation_set.csv"
+RESULT_PATH = dataPath + "results/"
 
 
 class smallModel(model_exemple):
@@ -14,11 +20,11 @@ class smallModel(model_exemple):
 
   def __init__(self, alpha=0.1,**kwargs):
 
-    train       = dataPath + "train_set.csv"
-    validation  = dataPath + "validation_set.csv"
-    dump        = dataPath + "results/test_results.csv"
-    json_dump   = dataPath + "results/test_json_results.csv" 
-    submissionPath   = dataPath + "results/test_submission.csv" 
+    train       = TRAIN 
+    validation  = VALIDATION 
+    dump        = RESULT_PATH + "test_results.csv"
+    json_dump   = RESULT_PATH + "test_json_results.csv" 
+    submissionPath   = RESULT_PATH + "test_submission.csv" 
 
     kwargs.update({
       "trainPath"       : train,

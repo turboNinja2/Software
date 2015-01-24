@@ -1,4 +1,5 @@
 from Models import *
+from ModelExemple import *
 
 class SoftwareTM():
 
@@ -13,19 +14,23 @@ class SoftwareTM():
     str(type(1))   : lambda x1, x2, step_range : lambda x : x
   }
   
-  def __init__(self,inf_bounds=None,sup_bounds=None,model=None,step=1,step_range=1):
+  def __init__(self,inf_bounds=None,sup_bounds=None,step=1,step_range=1,model=None,test=True,max_iterations=None):
     self.step       = step
     self.step_range = step_range
     self.inf_bounds = inf_bounds
     self.sup_bounds = sup_bounds
-    if model is None:
-      self.model = smallModel
+    self.max_iterations = max_iterations
+    custom_kwargs = {}
+    if max_iterations is not None:
+      custom_kwargs = {"max_iterations":max_iterations}
+    if test:
+      self.model = smallModel(model,custom_kwargs)
     else:
-      self.model = model
+      self.model = mediumModel(model,custom_kwargs)
     self.params = self.model.PARAMS_KEYS
     self.models = []
     self.result = []
-    self.algo   = foo#dichotomie
+    self.algo   = foo
 
   def compute_x12(self):
     self.result.extend(self.models.train_validated_dump_and_clear())

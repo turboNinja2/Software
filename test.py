@@ -5,9 +5,13 @@ from CustomModels           import *
 from Globals                import *
 from ModelExemple           import *
 
+
+
 class Test:
   def __init__(self):
-    self.model = smallModel() 
+    alpha = 0.1
+    model = OnlineLinearLearning
+    self.model = smallModel(model)({"alpha" : alpha}) 
 
     self.expected    = 0.479075086746664269288231707832892425358295440673828125
 

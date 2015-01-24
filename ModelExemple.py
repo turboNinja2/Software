@@ -6,87 +6,90 @@ from datetime import datetime
 dt = datetime.now().__str__()
 dummyString = ''.join(e for e in dt if e.isalnum())
 
-model_exemple = OnlineLinearLearning
-model_exemple = FTRLProximal
-real_model = LogOnlineLinearLearning
+
+DEFAULT_MODEL = OnlineLinearLearning
 
 TRAIN       = dataPath + "train_set.csv"
 VALIDATION  = dataPath + "validation_set.csv"
 RESULT_PATH = dataPath + "results/"
 
-
-class smallModel(model_exemple):
-
-
-  def __init__(self, alpha=0.1,**kwargs):
-
-    train       = TRAIN 
-    validation  = VALIDATION 
-    dump        = RESULT_PATH + "test_results.csv"
-    json_dump   = RESULT_PATH + "test_json_results.csv" 
-    submissionPath   = RESULT_PATH + "test_submission.csv" 
-
-    kwargs.update({
-      "trainPath"       : train,
-      "submissionPath" : submissionPath,
-      "testPath" : train,
-      "validationPath"  : validation,
-      "dumpingPath"     : dump,
-      "jsonDumpingPath" : json_dump,
+small_kwargs = {
+      "trainPath"       : TRAIN,
+      "validationPath"  : VALIDATION,
+      "dumpingPath"     : RESULT_PATH + "test_results.csv",
+      "jsonDumpingPath" : RESULT_PATH + "test_json_results.csv",
       "refreshLine"     : 75,
       "max_iterations"  : 100,
-    })
-    if "params" not in kwargs.keys():
-      params = {"alpha":alpha}
-      kwargs["params"] = params
+    }
 
-    model_exemple.__init__(self,**kwargs)
-
-
-class mediumModel(model_exemple):
-
-  def __init__(self,alpha=0.1,**kwargs):
-
-    train       = dataPath + 'test.csv'
-    validation  = dataPath + 'test.csv'
-    dump        = dataPath + "results/medium_results.csv"
-    json_dump   = dataPath + "results/medium_json_results.csv"
-
-    kwargs.update({
-      "trainPath"       : train,
-      "validationPath"  : validation,
-      "dumpingPath"     : dump,
-      "jsonDumpingPath" : json_dump,
-      "refreshLine"     : 1000000,
+medium_kwargs = {
+      "trainPath"       : TRAIN,
+      "validationPath"  : VALIDATION,
+      "dumpingPath"     : RESULT_PATH + "medium_result.csv",
+      "jsonDumpingPath" : RESULT_PATH + "medium_json_result.csv",
+      "refreshLine"     : pow(10,6),
       "parser_mode"     : "classic2",
       "max_iterations"  : 2*pow(10,6)
-    })
+    }
 
-    params = {"alpha" : alpha}
-
-    model_exemple.__init__(self,params,**kwargs)
-
-
-class realModel(real_model):
-
-
-  def __init__(self,alpha=0.01,**kwargs):
-
-    train       = dataPath + 'small_train_set.csv'  # path to training file
-    validation  = dataPath + 'validation_set.csv'  # path to testing file
-    dump        = dataPath + "results/results" + dummyString + ".csv"
-    json_dump   = dataPath + "results/json_results" + dummyString + ".csv"
-
-    kwargs.update({
-      "trainPath"       : train,
-      "validationPath"  : validation,
-      "dumpingPath"     : dump,
-      "jsonDumpingPath" : json_dump,
+real_kwargs = {
+      "trainPath"       : TRAIN,
+      "validationPath"  : VALIDATION,
+      "dumpingPath"     : RESULT_PATH + "results" + dummyString + ".csv",
+      "jsonDumpingPath" : RESULT_PATH + "results" + dummyString + ".csv",
       "refreshLine"     : 2.5*pow(10,6),
       "parser_mode"     : "classic2",
-    })
+    }
 
-    params = {"alpha" : alpha}
 
-    real_model.__init__(self,params,**kwargs)
+ 
+
+def model_builder(model,model_kwargs):
+  mo = model
+
+  mo.custom_init = model.__init__
+  def new_init(self,params,**kwargs):
+    #kwargs.update(model_kwargs)
+    for key in model_kwargs.keys():
+      if key not in kwargs:
+        kwargs[key] = model_kwargs[key]
+    self.custom_init(params,**kwargs)
+  mo.__init__ = new_init
+  return mo
+
+def smallModel(model=DEFAULT_MODEL,custom_kwargs={}):
+  kwargs = small_kwargs
+  kwargs.update(custom_kwargs)
+  return model_builder(model,kwargs)
+
+def mediumModel(model=DEFAULT_MODEL,custom_kwargs={}):
+  kwargs = medium_kwargs
+  kwargs.update(custom_kwargs)
+  return model_builder(model,kwargs)
+
+def realModel(model=DEFAULT_MODEL,custom_kwargs={}):
+  kwargs = real_kwargs
+  kwargs.update(custom_kwargs)
+  return model_builder(model,kwargs)
+
+###################################################################
+## HOW TO
+"""
+How to use the Model Exemples.
+
+small models are use for tests, medium for software and real model to the real algorithm.
+
+you can call small model with the model you want, and some kwargs you want.
+This will create a Model genetor.
+Use the model generator as a custom class to call models. Some paths, and several other params as been already computed, so you don't have to deal with it.
+
+here's an exemple : 
+my_cute_model_generator = smallModel(model=OnlineLinearLearning,{max_iterations:200})
+
+know, if you got some kwargs, you can create a small_model like this :
+my_model = my_cute_model_generator({"params":{"alpha":0.1}})
+Amazing, isn't it ?
+
+questions ? ulysseklatzmann@gmail.com
+"""
 

@@ -95,6 +95,7 @@ class Density():
       c += 1
     s = s/float(c)
     return s
+
  
   ####################################################################################
   ## EXTERNAL FUNCTIONS
@@ -110,4 +111,9 @@ class Density():
           return self.foo(c,self.X,1000)
       elif value < proba:
         return self.foo(c,self.X,1000) #FIXME Aproximation
+    i = 0
+    past = self.X[0]
+    while(True):
+      if value > self.X[i]:
+        
 

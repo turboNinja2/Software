@@ -37,6 +37,7 @@ real_kwargs = {
       "validationPath"  : VALIDATION,
       "dumpingPath"     : RESULT_PATH + "results" + dummyString + ".csv",
       "jsonDumpingPath" : RESULT_PATH + "results" + dummyString + ".csv",
+      "submissionPath"   : RESULT_PATH + "submition" + dummyString + ".csv",
       "refreshLine"     : 2.5*pow(10,6),
       "parser_mode"     : "classic2",
     }

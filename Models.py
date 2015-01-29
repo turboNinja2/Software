@@ -5,12 +5,12 @@ from multiprocessing  import Pool, Process, Queue
 from ModelExemple     import *
 
 class Models:
-  def __init__(self, models,online=False):
+  def __init__(self, models,online=False,para=False):
     if online:
       self.gen_params = models #Format : [(modelClass, modelKwargs)]
     else:
       self.models = models
-    self.para = False
+    self.para = para
     self.online = online
   
   def gen_models(self):
@@ -41,13 +41,23 @@ class Models:
 
   def train_validated_dump_and_clear(self):
     result = []
-    if self.para:
-      raise Exception("Not implemented yet")
+    if self.online:
+      models = self.gen_models()
     else:
-      if self.online:
-        models = self.gen_models()
-      else:
-        models = self.models
+      models = self.models
+    if self.para:
+      def f(m):
+        m.train()
+        m.validate()
+        m.dump_score()
+        r = m.params, m.getValidationLogLoss()
+        del m
+        return r
+
+      pool = Pool(processes=num_cores)
+      result = pool.map(lambda x : f(x),models)
+      pool.close()
+    else:
       for model in models :
         model.train()
         model.validate()
